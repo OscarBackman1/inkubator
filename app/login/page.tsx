@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <input
               name="email"
               type="email"
-              defaultValue="admin@movexum.se"
+              placeholder="namn@movexum.se"
               className="mt-1 w-full rounded border border-stone-300 px-3 py-2"
               required
             />
@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <input
               name="password"
               type="password"
-              defaultValue="demo"
+              placeholder="Lösenord"
               className="mt-1 w-full rounded border border-stone-300 px-3 py-2"
               required
             />
