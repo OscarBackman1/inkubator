@@ -36,7 +36,7 @@ export function mockMateriality(input: MaterialityInput): MaterialityResult {
       materialityDrivers: ["IMPACT", "VALUE_CHAIN", "OPPORTUNITY"],
       underlyingAspects: ["Materialval", "Cirkularitet", "Leverantörskedja"],
       rationale:
-        "Affärsidén tycks vara beroende av materialflöden och kan skapa både positiv cirkulär potential och risker i inköp, produktion och avfall.",
+        "Resursanvändning och cirkularitet handlar om hur material väljs, används och kan återföras eller minska spill. Området bedöms vara väsentligt eftersom bolagets lösning verkar vara beroende av materialflöden mellan produkt, produktion och leverantörer.",
       startupSpecificReason:
         "I en tidig fas är materialval, pilotproduktion och leverantörsval viktiga vägval som kan påverka bolagets framtida hållbarhetsprofil.",
       futureDevelopmentRelevance:
@@ -57,7 +57,7 @@ export function mockMateriality(input: MaterialityInput): MaterialityResult {
         ? ["Digital infrastruktur", "Energianvändning", "Datacenterpåverkan"]
         : ["Energianvändning", "Klimatpåverkan vid skalning"],
       rationale:
-        "Bolagets framtida klimatpåverkan beror sannolikt mer på skalningsval och värdekedja än på dagens begränsade verksamhet.",
+        "Klimatförändringar handlar om hur bolagets lösning påverkar eller påverkas av energi, drift, transporter och andra utsläppskällor. Området bedöms vara väsentligt eftersom bolagets produkt, teknik och värdekedja har en direkt koppling till energibehov och utsläppskällor.",
       startupSpecificReason:
         "Tidiga teknik- och affärsmodellval kan göra det lättare att styra mot lägre klimatpåverkan när kundbasen växer.",
       futureDevelopmentRelevance:
@@ -79,8 +79,8 @@ export function mockMateriality(input: MaterialityInput): MaterialityResult {
       ? ["Patientsäkerhet", "Dataskydd", "Ansvarsfull AI", "Tillgänglighet"]
       : ["Dataskydd", "Informationssäkerhet", "Ansvarsfull AI", "Transparens"],
     rationale: isHealth
-      ? "Hälsorelaterade lösningar kan få direkt påverkan på användare och patienter, även när bolaget är tidigt."
-      : "Digitala och AI-stödda affärsmodeller behöver tidigt hantera ansvar, data, transparens och förtroende.",
+      ? "Konsumenter och slutanvändare handlar om hur lösningen påverkar personer som använder eller berörs av produkten. Området bedöms vara väsentligt eftersom hälsorelaterade lösningar har en direkt koppling till användares trygghet, tillgänglighet och beslut."
+      : "Affärsetik och bolagsstyrning handlar om ansvar, datahantering, transparens och förtroende i hur bolaget utvecklar och erbjuder sin lösning. Området bedöms vara väsentligt eftersom digitala och AI-stödda affärsmodeller ofta bygger på information och relationer där tydliga principer påverkar kundernas förtroende.",
     startupSpecificReason:
       "Det är rimligt att diskutera principer, ansvar och riskförståelse tidigt även om bolaget ännu saknar formella policys.",
     futureDevelopmentRelevance:

@@ -13,6 +13,7 @@ Tillåtna status för selectedAspects: MATERIAL, UNCERTAIN.
 Tillåtna confidence: LOW, MEDIUM, HIGH.
 Tillåtna materialityDrivers: RISK, OPPORTUNITY, IMPACT, VALUE_CHAIN, REGULATORY, USER_IMPACT.
 materialityStrength ska vara heltal 1-5.
+rationale visas som huvudtext i väsentlighetsanalysen och ska vara 2-3 neutrala meningar om vad området handlar om och varför det är väsentligt för just bolaget. Beskriv inte risker, möjligheter, nuläge, framtida utveckling eller rekommendationer i rationale.
 evidence MÅSTE vara en array av objekt, t.ex. [{"note":"Underlaget visar ..."}], aldrig en string.
 uncertaintyNotes MÅSTE vara string[], t.ex. ["Det saknas information om ..."], aldrig en string.`,
 

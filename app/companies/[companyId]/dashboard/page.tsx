@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { AiSubmitButton } from "@/components/AiSubmitButton";
 import { Badge } from "@/components/Badge";
+import { FileDropInput } from "@/components/FileDropInput";
 import { ImpactLevelBadge } from "@/components/ImpactLevelBadge";
 import { RiskIndicatorBadge } from "@/components/RiskIndicatorBadge";
 import { ScoreGauge } from "@/components/ScoreGauge";
@@ -145,16 +146,16 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
             Vad har hänt sedan sist?
             <textarea name="narrative" rows={5} className="mt-1 w-full rounded border border-stone-300 px-3 py-2" required />
           </label>
-          <label className="text-sm font-medium">
-            Nya dokument
-            <input
+          <div>
+            <p className="text-sm font-medium">Nya dokument</p>
+            <FileDropInput
               name="documents"
-              type="file"
               multiple
               accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
-              className="mt-1 w-full rounded border border-stone-300 bg-white px-3 py-2"
+              title="Nya dokument"
+              description="Dra nya filer till ytan eller välj dem från datorn."
             />
-          </label>
+          </div>
           <AiSubmitButton
             idleLabel="Skapa ny analysversion"
             pendingLabel="Uppdaterar analys..."

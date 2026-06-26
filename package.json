@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:generate": "prisma generate",
+    "db:generate:local": "prisma generate --schema prisma/schema.local.prisma",
     "db:push": "prisma db push",
+    "db:push:local": "prisma db push --schema prisma/schema.local.prisma",
     "db:init": "sqlite3 prisma/dev.db \".read prisma/init.sql\"",
     "db:seed": "tsx prisma/seed.ts"
   },

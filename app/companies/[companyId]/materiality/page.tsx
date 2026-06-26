@@ -80,8 +80,6 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
                   </div>
                 </div>
                 <p className="mt-4 leading-7 text-stone-700">{aspect.rationale}</p>
-                <p className="mt-2 leading-7 text-stone-700">{aspect.startupSpecificReason}</p>
-                <p className="mt-2 text-sm text-stone-600">{aspect.futureDevelopmentRelevance}</p>
                 {aspect.uncertaintyNotes.length > 0 && (
                   <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-stone-600">
                     {aspect.uncertaintyNotes.map((note) => (

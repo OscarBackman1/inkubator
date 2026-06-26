@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  INFLOW
+  COACH
+  BUSINESS_DEVELOPER
+}
+
+enum CompanyPhase {
+  SCREENING
+  BOOST_CHAMBER
+  INKUBATOR
+  ACCELERATOR
+}
+
+enum CompanyStatus {
+  DRAFT
+  MATERIALITY_REVIEW
+  INFO_COLLECTION
+  NEEDS_MORE_INFO
+  ANALYZED
+}
+
+enum UploadStage {
+  IDEA_DESCRIPTION
+  FULL_INFORMATION
+  GAP_RESPONSE
+  UPDATE
+}
+
+enum ExtractionStatus {
+  PENDING
+  COMPLETE
+  FAILED
+}
+
+enum AssessmentType {
+  INITIAL
+  UPDATE
+}
+
+enum AssessmentStatus {
+  MATERIALITY_PENDING
+  MATERIALITY_REVIEW
+  INFO_PENDING
+  NEEDS_MORE_INFO
+  FINAL_PENDING
+  COMPLETE
+  FAILED
+}
+
+enum GapSeverity {
+  REQUIRED
+  RECOMMENDED
+}
+
+enum GapQuestionStatus {
+  OPEN
+  ANSWERED
+  NOT_AVAILABLE
+}
+
+enum AIJobType {
+  MATERIALITY
+  SUFFICIENCY
+  FINAL_ANALYSIS
+  UPDATE_ANALYSIS
+}
+
+enum AIJobStatus {
+  PENDING
+  RUNNING
+  COMPLETE
+  FAILED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdCompanies Company[]    @relation("CompanyCreatedBy")
+  assignedCompanies Company[]   @relation("CompanyAssignedTo")
+  documents        Document[]
+  assessments      Assessment[]
+  overrides        MaterialityOverride[]
+  updateEvents     UpdateEvent[]
+  notes            Note[]
+}
+
+model Company {
+  id           String        @id @default(cuid())
+  name         String
+  phase        CompanyPhase
+  industry     String
+  journeyText  String
+  status       CompanyStatus @default(DRAFT)
+  createdById  String
+  assignedToId String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  createdBy  User  @relation("CompanyCreatedBy", fields: [createdById], references: [id])
+  assignedTo User? @relation("CompanyAssignedTo", fields: [assignedToId], references: [id])
+
+  documents    Document[]
+  assessments  Assessment[]
+  updateEvents UpdateEvent[]
+  notes        Note[]
+  aiJobs       AIJob[]
+}
+
+model Document {
+  id                String           @id @default(cuid())
+  companyId         String
+  uploadedById      String
+  assessmentId      String?
+  updateEventId     String?
+  gapQuestionId     String?
+  uploadStage       UploadStage
+  originalName      String
+  mimeType          String
+  sizeBytes         Int
+  storagePath       String
+  extractedText     String?
+  extractionStatus  ExtractionStatus @default(PENDING)
+  extractionWarning String?
+  openaiFileId      String?
+  createdAt         DateTime         @default(now())
+
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploadedBy  User         @relation(fields: [uploadedById], references: [id])
+  assessment  Assessment?  @relation(fields: [assessmentId], references: [id])
+  updateEvent UpdateEvent? @relation(fields: [updateEventId], references: [id])
+  gapQuestion GapQuestion? @relation(fields: [gapQuestionId], references: [id])
+}
+
+model Assessment {
+  id                      String           @id @default(cuid())
+  companyId               String
+  version                 Int
+  type                    AssessmentType
+  status                  AssessmentStatus
+  frameworkVersion        String
+  materialityJson         Json?
+  sufficiencyJson         Json?
+  dashboardJson           Json?
+  updateDeltaJson         Json?
+  informationQualityScore Int?
+  modelName               String?
+  promptVersion           String?
+  inputHash               String?
+  previousAssessmentId    String?
+  createdById             String
+  createdAt               DateTime         @default(now())
+  completedAt             DateTime?
+
+  company            Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy          User         @relation(fields: [createdById], references: [id])
+  previousAssessment Assessment?  @relation("AssessmentHistory", fields: [previousAssessmentId], references: [id])
+  nextAssessments    Assessment[] @relation("AssessmentHistory")
+  documents          Document[]
+  overrides          MaterialityOverride[]
+  gapQuestions       GapQuestion[]
+  aiJobs             AIJob[]
+  updateEvents       UpdateEvent[]
+
+  @@unique([companyId, version])
+}
+
+model MaterialityOverride {
+  id             String   @id @default(cuid())
+  assessmentId   String
+  aspectCode     String
+  originalStatus String
+  newStatus      String
+  comment        String?
+  createdById    String
+  createdAt      DateTime @default(now())
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  createdBy  User       @relation(fields: [createdById], references: [id])
+}
+
+model GapQuestion {
+  id                 String            @id @default(cuid())
+  assessmentId       String
+  aspectCode         String
+  question           String
+  missingInformation String
+  severity           GapSeverity
+  status             GapQuestionStatus @default(OPEN)
+  answerText         String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  documents  Document[]
+}
+
+model UpdateEvent {
+  id           String   @id @default(cuid())
+  companyId    String
+  assessmentId String?
+  createdById  String
+  narrative    String
+  createdAt    DateTime @default(now())
+
+  company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  assessment Assessment? @relation(fields: [assessmentId], references: [id])
+  createdBy  User       @relation(fields: [createdById], references: [id])
+  documents  Document[]
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+model AIJob {
+  id            String      @id @default(cuid())
+  companyId     String
+  assessmentId  String?
+  jobType       AIJobType
+  status        AIJobStatus
+  inputHash     String
+  modelName     String?
+  promptVersion String
+  outputJson    Json?
+  error         String?
+  createdAt     DateTime    @default(now())
+  completedAt   DateTime?
+
+  company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  assessment Assessment? @relation(fields: [assessmentId], references: [id])
+}

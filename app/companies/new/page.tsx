@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/AppShell";
 import { AiSubmitButton } from "@/components/AiSubmitButton";
+import { FileDropInput } from "@/components/FileDropInput";
 import { createCompanyAction } from "@/lib/actions/company";
 import { requireUser } from "@/lib/auth/session";
 import { phaseLabels } from "@/lib/sustainability/labels";
@@ -41,34 +42,34 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
             <input name="industry" className="mt-1 w-full rounded border border-stone-300 px-3 py-2" required />
           </label>
         </div>
-        <label className="text-sm font-medium">
-          Ifylld idébeskrivning
-          <input
+        <div>
+          <p className="text-sm font-medium">Ifylld idébeskrivning</p>
+          <FileDropInput
             name="ideaFile"
-            type="file"
             accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
-            className="mt-1 w-full rounded border border-stone-300 bg-white px-3 py-2"
             required
+            title="Ifylld idébeskrivning"
+            description="Dra filen till ytan eller välj den från datorn."
           />
-        </label>
+        </div>
         <label className="text-sm font-medium">
-          Berätta var bolaget är på sin egen resa
+          Vad kan du berätta om bolagets hållbarhetsambitioner, viktiga vägval eller arbete med miljömässiga, sociala eller styrningsfrågor?
+          <span className="mt-2 block rounded bg-stone-50 p-3 text-sm font-normal leading-6 text-stone-600">
+            Skriv fritt även om arbetet är tidigt eller osäkert. Nämn gärna nuläge, prioriteringar, affärsmodell,
+            kundgrupp, teknik, geografi, produktion, leverantörer, data/AI, team och frågor ni redan ser som viktiga.
+          </span>
           <textarea
             name="journeyText"
             rows={8}
-            className="mt-1 w-full rounded border border-stone-300 px-3 py-2"
+            className="mt-3 w-full rounded border border-stone-300 px-3 py-2"
             required
           />
-          <span className="mt-2 block text-xs leading-5 text-stone-500">
-            Beskriv bolagets nuläge, prioriteringar, framtidsplaner, affärsmodell, kundgrupp, teknik, geografi,
-            produktion, leverantörer, data/AI-användning, personal och de frågor ni redan ser som viktiga.
-          </span>
         </label>
         <AiSubmitButton
           idleLabel="Skapa företag"
           pendingLabel="Skapar och analyserar..."
           pendingTitle="Väsentlighetsanalys körs"
-          pendingDescription="AI:n läser idébeskrivningen, branschen och bolagets resa för att identifiera de mest relevanta hållbarhetsområdena."
+          pendingDescription="AI:n läser idébeskrivningen, branschen och bolagets hållbarhetsambitioner för att identifiera de mest relevanta områdena."
         />
       </form>
     </AppShell>

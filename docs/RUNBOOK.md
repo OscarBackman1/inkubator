@@ -5,8 +5,8 @@
 ```bash
 npm install
 cp .env.example .env
-npm run db:generate
-npm run db:push
+npm run db:generate:local
+npm run db:push:local
 npm run db:seed
 npm run dev
 ```

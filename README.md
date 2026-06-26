@@ -4,13 +4,13 @@ En webbaserad prototyp för Movexums interna hållbarhets- och impactbedömning 
 
 ## Kom igång
 
-Appen använder Postgres för både lokal körning och Vercel. Skapa en Postgres-databas, till exempel i Neon, Supabase eller Vercel Postgres, och lägg anslutningssträngen i `.env`.
+Appen använder lokal SQLite för prototyptestning. Standardkonfigurationen i `.env.example` pekar på `prisma/dev.db`.
 
 ```bash
 npm install
 cp .env.example .env
-npm run db:generate
-npm run db:push
+npm run db:generate:local
+npm run db:push:local
 npm run db:seed
 npm run dev
 ```
@@ -36,15 +36,16 @@ Starta om dev-servern efter ändringen. Toppbaren visar `OpenAI aktivt` när app
 
 1. Pusha projektet till GitHub.
 2. Importera repot i Vercel.
-3. Lägg in environment variables i Vercel:
+3. Vercel använder defaultschemat `prisma/schema.prisma` med Postgres. Lokal testning använder `prisma/schema.local.prisma` med SQLite.
+4. Lägg in environment variables i Vercel:
    - `DATABASE_URL`
    - `AI_MOCK_MODE=false`
    - `OPENAI_API_KEY`
    - `OPENAI_MODEL=gpt-5-mini`
    - `OPENAI_TIMEOUT_MS=120000`
    - `MAX_UPLOAD_MB=25`
-4. Deploya. Vercel kör `npm run vercel-build`, vilket genererar Prisma Client, pushar databasschemat och bygger Next.js.
-5. Kör seed-kommandot mot samma databas för att skapa testkonton:
+5. Deploya. Vercel kör `npm run vercel-build`, vilket genererar Prisma Client, pushar databasschemat och bygger Next.js.
+6. Kör seed-kommandot mot samma databas för att skapa testkonton:
 
 ```bash
 npm run db:seed

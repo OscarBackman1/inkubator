@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { AiSubmitButton } from "@/components/AiSubmitButton";
 import { Badge } from "@/components/Badge";
+import { FileDropInput } from "@/components/FileDropInput";
 import { Stepper } from "@/components/Stepper";
 import { finalizeAnalysisAction, uploadInformationAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
@@ -50,12 +51,13 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
           <p className="mt-2 text-sm text-stone-600">
             Pitchdeck, affärsplan, marknadsanalys, teknisk beskrivning, kundunderlag eller andra dokument som redan finns.
           </p>
-          <input
+          <FileDropInput
             name="documents"
-            type="file"
             multiple
             accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
-            className="mt-4 w-full rounded border border-stone-300 bg-white px-3 py-2"
+            title="Ytterligare information"
+            description="Dra en eller flera filer till ytan eller välj dem från datorn."
+            className="mt-4"
           />
           <AiSubmitButton
             idleLabel="Kör informationsgapanalys"
