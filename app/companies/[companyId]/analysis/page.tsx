@@ -40,7 +40,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
         <p className="text-sm uppercase tracking-wide text-stone-500">Steg 2 av 3 – Komplettera information</p>
         <h1 className="text-3xl font-semibold">Analys & informationsgap</h1>
         <p className="mt-2 max-w-3xl text-stone-600">
-          Ladda upp det som faktiskt finns. Verktyget frågar bara efter sådant som behövs för nästa bedömning och
+          Ladda upp ytterligare information om bolaget. Verktyget frågar bara efter sådant som behövs för nästa bedömning och
           låter dig gå vidare även om allt inte är besvarat.
         </p>
       </div>
