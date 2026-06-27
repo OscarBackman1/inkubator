@@ -29,7 +29,7 @@ export async function extractTextFromFile(storagePath: string, mimeType: string,
       return {
         text: "",
         warning:
-          "PowerPoint-text extraheras begränsat i prototypen. Exportera gärna pitchdeck som PDF eller TXT för bättre AI-tolkning."
+          "PowerPoint-text extraheras begränsat i prototypen. Exportera gärna pitchdeck som PDF eller TXT för bättre textanalys."
       };
     }
 

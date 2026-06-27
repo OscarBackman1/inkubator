@@ -1,5 +1,23 @@
 # Promptversioner
 
+## 2026-06-27-v2
+
+Skärpt fasstyrning för frågor.
+
+- `input.phase` skickas med till informationsgap, slutanalys och uppdateringsanalys.
+- Frågor ska anpassas efter Movexumfas och inte kräva mer moget underlag än bolaget rimligen har.
+- För Screening ska frågor kunna besvaras med antaganden, tidiga observationer, kundsamtal eller planerade tester.
+- För senare faser kan frågor handla mer om pilotlärdomar, arbetssätt och resultat, men utan krav på formell rapportering.
+
+## 2026-06-27-v1
+
+Förtydligade regler för kompletteringsfrågor och diskussionsfrågor.
+
+- Frågor ska kunna besvaras av en coach eller grundare utan specialistkunskap.
+- Frågor ska undvika tekniska termer, förkortningar och fackspråk.
+- Frågor ska handla om observerbara fakta, erfarenheter, feedback, resultat, beslut eller arbetssätt.
+- Frågor ska kunna besvaras med 3-5 meningar och vara rimliga utifrån bolagets fas.
+
 ## 2026-06-26-v1
 
 Förtydligad väsentlighetsanalys efter testfeedback.

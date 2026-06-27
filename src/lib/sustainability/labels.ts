@@ -20,6 +20,37 @@ export const categoryLabels = {
   CUSTOM: "Eget område"
 } as const;
 
+export const categoryCodePrefixes = {
+  ENVIRONMENT: "ENV",
+  SOCIAL: "SOC",
+  GOVERNANCE: "GOV",
+  CUSTOM: "CUS"
+} as const;
+
+export const confidenceLabels = {
+  LOW: "Låg",
+  MEDIUM: "Medel",
+  HIGH: "Hög"
+} as const;
+
+export const materialityDriverLabels = {
+  RISK: "Risk",
+  OPPORTUNITY: "Möjlighet",
+  IMPACT: "Påverkan",
+  VALUE_CHAIN: "Värdekedja",
+  REGULATORY: "Regelverk",
+  USER_IMPACT: "Användarpåverkan"
+} as const;
+
+export const materialityDriverDescriptions = {
+  RISK: "Kan skapa framtida affärs-, förtroende- eller hållbarhetsrisker.",
+  OPPORTUNITY: "Kan stärka erbjudandet, positioneringen eller möjligheten att skala ansvarsfullt.",
+  IMPACT: "Kan ge tydlig positiv eller negativ påverkan om affärsidén växer.",
+  VALUE_CHAIN: "Beror på leverantörer, produktion, drift, distribution eller andra led runt lösningen.",
+  REGULATORY: "Kan påverkas av regler, standarder, branschkrav eller kunders kravbild.",
+  USER_IMPACT: "Berör människors trygghet, integritet, tillgänglighet eller beslut."
+} as const;
+
 export const uploadStageLabels = {
   IDEA_DESCRIPTION: "Idébeskrivning",
   FULL_INFORMATION: "Full information",

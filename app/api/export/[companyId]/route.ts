@@ -36,11 +36,12 @@ export async function GET(_request: Request, context: { params: Promise<{ compan
   <h2>Sammanfattning</h2>
   <p>${escapeHtml(dashboard.executiveSummary)}</p>
   <h2>Grundläggande affärsmodellbedömning</h2>
+  <p><strong>Placering i bedömningsmatrisen: ${escapeHtml(dashboard.impactLevel.labelSv)}</strong></p>
+  <p>${escapeHtml(dashboard.impactLevel.rationale)}</p>
   <p>${escapeHtml(dashboard.businessModelCompatibility.rationale)}</p>
-  <h2>Impactnivå och riskindikator</h2>
-  <p><strong>${escapeHtml(dashboard.impactLevel.labelSv)}</strong>: ${escapeHtml(dashboard.impactLevel.rationale)}</p>
+  <h2>Riskbild</h2>
   <p><strong>${escapeHtml(dashboard.riskIndicator.labelSv)}</strong>: ${escapeHtml(dashboard.riskIndicator.rationale)}</p>
-  <h2>Scores</h2>
+  <h2>Poäng</h2>
   <div class="grid">
     <div class="box">Samlad<br><strong>${dashboard.scores.overall}</strong></div>
     <div class="box">Miljö<br><strong>${dashboard.scores.environment}</strong></div>

@@ -35,10 +35,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
             {phaseLabels[company.phase]} · {company.industry} · Senast analyserad {assessment.completedAt?.toLocaleDateString("sv-SE") ?? "pågående"}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <ImpactLevelBadge label={dashboard.impactLevel.labelSv} />
-          <RiskIndicatorBadge label={dashboard.riskIndicator.labelSv} />
-        </div>
       </div>
 
       <section className="mb-5 rounded border border-stone-200 bg-white p-5 shadow-soft">
@@ -56,20 +52,37 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
       <div className="grid gap-5 xl:grid-cols-2">
         <section className="rounded border border-stone-200 bg-white p-5 shadow-soft">
           <h2 className="text-lg font-semibold">Grundläggande affärsmodellbedömning</h2>
-          <Badge tone={dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY" ? "good" : "warn"}>
-            {dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY"
-              ? "Förenlig med långsiktigt hållbar utveckling"
-              : dashboard.businessModelCompatibility.status === "HARMFUL_OR_RISKY"
-                ? "Skadlig eller riskfylld"
-                : "Osäker"}
-          </Badge>
-          <p className="mt-3 leading-7 text-stone-700">{dashboard.businessModelCompatibility.rationale}</p>
-          <p className="mt-2 text-sm text-stone-600">{dashboard.businessModelCompatibility.consequencesIfScaled}</p>
+          <div className="mt-4 space-y-4">
+            <div>
+              <p className="text-sm font-medium text-stone-500">Placering i bedömningsmatrisen</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <ImpactLevelBadge label={dashboard.impactLevel.labelSv} />
+                <span className="text-sm text-stone-600">Bolagets samlade potential och inriktning.</span>
+              </div>
+              <p className="mt-2 leading-7 text-stone-700">{dashboard.impactLevel.rationale}</p>
+            </div>
+            <div className="border-t border-stone-100 pt-4">
+              <p className="text-sm font-medium text-stone-500">Affärsmodellens grundförutsättning</p>
+              <div className="mt-2">
+                <Badge tone={dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY" ? "good" : "warn"}>
+                  {dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY"
+                    ? "Förenlig med långsiktigt hållbar utveckling"
+                    : dashboard.businessModelCompatibility.status === "HARMFUL_OR_RISKY"
+                      ? "Skadlig eller riskfylld"
+                      : "Osäker"}
+                </Badge>
+              </div>
+              <p className="mt-3 leading-7 text-stone-700">{dashboard.businessModelCompatibility.rationale}</p>
+              <p className="mt-2 text-sm text-stone-600">{dashboard.businessModelCompatibility.consequencesIfScaled}</p>
+            </div>
+          </div>
         </section>
 
         <section className="rounded border border-stone-200 bg-white p-5 shadow-soft">
-          <h2 className="text-lg font-semibold">Impactnivå och riskindikator</h2>
-          <p className="mt-3 leading-7 text-stone-700">{dashboard.impactLevel.rationale}</p>
+          <h2 className="text-lg font-semibold">Riskbild</h2>
+          <div className="mt-3">
+            <RiskIndicatorBadge label={dashboard.riskIndicator.labelSv} />
+          </div>
           <p className="mt-3 leading-7 text-stone-700">{dashboard.riskIndicator.rationale}</p>
         </section>
       </div>
@@ -160,7 +173,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
             idleLabel="Skapa ny analysversion"
             pendingLabel="Uppdaterar analys..."
             pendingTitle="Ny analysversion skapas"
-            pendingDescription="AI:n jämför tidigare dashboard med ny information och markerar förändrade risker, möjligheter, scores och diskussionsfrågor."
+            pendingDescription="Tidigare dashboard jämförs med ny information för att markera förändrade risker, möjligheter, poäng och diskussionsfrågor."
             fallbackHref={`/companies/${company.id}/dashboard`}
           />
         </form>

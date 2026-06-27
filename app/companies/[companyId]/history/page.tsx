@@ -38,7 +38,7 @@ export default async function HistoryPage({ params }: { params: Promise<{ compan
                 </div>
               </div>
               <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-4">
-                <div><dt className="text-stone-500">Score</dt><dd className="font-semibold">{dashboard?.scores.overall ?? "-"}</dd></div>
+                <div><dt className="text-stone-500">Poäng</dt><dd className="font-semibold">{dashboard?.scores.overall ?? "-"}</dd></div>
                 <div><dt className="text-stone-500">Miljö</dt><dd className="font-semibold">{dashboard?.scores.environment ?? "-"}</dd></div>
                 <div><dt className="text-stone-500">Socialt</dt><dd className="font-semibold">{dashboard?.scores.social ?? "-"}</dd></div>
                 <div><dt className="text-stone-500">Styrning</dt><dd className="font-semibold">{dashboard?.scores.governance ?? "-"}</dd></div>

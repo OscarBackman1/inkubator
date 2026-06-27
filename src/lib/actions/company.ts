@@ -188,7 +188,7 @@ export async function uploadInformationAction(companyId: string, assessmentId: s
 
   const assessment = await prisma.assessment.findUniqueOrThrow({
     where: { id: assessmentId },
-    include: { documents: true }
+    include: { company: true, documents: true }
   });
   const materiality = assessment.materialityJson as MaterialityResult;
   const documentText = combineDocumentText(assessment.documents);
@@ -196,6 +196,7 @@ export async function uploadInformationAction(companyId: string, assessmentId: s
   await runSufficiencyAnalysis({
     companyId,
     assessmentId,
+    phase: assessment.company.phase,
     materiality,
     documentText
   });
@@ -244,6 +245,7 @@ export async function finalizeAnalysisAction(companyId: string, assessmentId: st
     companyId,
     assessmentId,
     companyName: refreshed.company.name,
+    phase: refreshed.company.phase,
     industry: refreshed.company.industry,
     materiality: refreshed.materialityJson as MaterialityResult,
     sufficiency: refreshed.sufficiencyJson as SufficiencyResult,
@@ -279,6 +281,7 @@ export async function updateCompanyAction(companyId: string, formData: FormData)
     previousDashboard: previous.dashboardJson as FinalAnalysisResult,
     narrative,
     companyName: company.name,
+    phase: company.phase,
     materiality: previous.materialityJson as MaterialityResult,
     sufficiency: previous.sufficiencyJson as SufficiencyResult
   });

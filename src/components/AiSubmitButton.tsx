@@ -1,6 +1,6 @@
 "use client";
 
-import { BrainCircuit, LoaderCircle, Sparkles } from "lucide-react";
+import { FileSearch, LoaderCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -42,7 +42,7 @@ export function AiSubmitButton({
           className
         )}
       >
-        {showPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+        {showPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         {showPending ? pendingLabel : idleLabel}
       </button>
       {showPending && <AiAnalysisOverlay title={pendingTitle} description={pendingDescription} fallbackHref={fallbackHref} />}
@@ -77,10 +77,10 @@ function AiAnalysisOverlay({
         <div className="flex items-start gap-4">
           <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded bg-forest text-white">
             <span className="absolute h-14 w-14 animate-ping rounded bg-forest/30" />
-            <BrainCircuit className="relative h-7 w-7" />
+            <FileSearch className="relative h-7 w-7" />
           </div>
           <div>
-            <p className="text-sm uppercase tracking-wide text-stone-500">AI-analys pågår</p>
+            <p className="text-sm uppercase tracking-wide text-stone-500">Analys pågår</p>
             <h2 className="mt-1 text-xl font-semibold text-ink">{title}</h2>
             <p className="mt-2 text-sm leading-6 text-stone-600">{description}</p>
           </div>
@@ -91,8 +91,8 @@ function AiAnalysisOverlay({
           <LoadingStep label="Formulerar coachande slutsatser på svenska" delay="delay-300" />
         </div>
         <p className="mt-5 rounded bg-stone-50 p-3 text-xs leading-5 text-stone-500">
-          Stäng inte fliken medan analysen körs. Riktig OpenAI-körning kan ta upp till någon minut beroende på
-          underlagets storlek.
+          Behåll fliken öppen medan bedömningen tas fram. Det kan ta upp till någon minut beroende på underlagets
+          omfattning.
         </p>
         {showFallback && (
           <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">

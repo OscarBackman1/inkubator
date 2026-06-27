@@ -25,3 +25,6 @@ Det är inte ett ESG-rapporteringsverktyg och gör inte formell CSRD-, VSME-, ju
 - Begränsad information ska synas som osäkerhet, inte som automatiskt oväsentligt område.
 - Rekommendationer ska vara realistiska för startups.
 - All AI-output ska vara konkret, svensk och coachande.
+- Kompletteringsfrågor och diskussionsfrågor ska kunna besvaras av en coach eller grundare utan specialistkunskap.
+- Frågor ska efterfråga observerbara fakta, erfarenheter, feedback, resultat, beslut eller arbetssätt, inte teknisk implementation eller fackspråk.
+- Frågor ska anpassas efter Movexumfas och inte kräva mer moget underlag än bolaget rimligen har i den fasen.

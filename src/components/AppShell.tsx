@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { logoutAction } from "@/lib/actions/auth";
-import { getAiRuntimeStatus } from "@/lib/ai/client";
 import { Sidebar } from "./Sidebar";
 
 export function AppShell({
@@ -12,7 +11,6 @@ export function AppShell({
   user: { name: string; email: string; role: string };
   companyId?: string;
 }) {
-  const aiStatus = getAiRuntimeStatus();
   return (
     <div className="min-h-screen bg-paper text-ink">
       <div className="flex min-h-screen">
@@ -23,9 +21,6 @@ export function AppShell({
               Movexum Impact Navigator
             </Link>
             <div className="flex items-center gap-3 text-sm text-stone-600">
-              <span className={aiStatus.mode === "mock" ? "rounded border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800" : "rounded border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs text-emerald-800"}>
-                {aiStatus.mode === "mock" ? "Mock-AI aktivt" : `OpenAI aktivt · ${aiStatus.model}`}
-              </span>
               <form action={logoutAction}>
                 <button className="rounded border border-stone-300 px-3 py-1.5 hover:bg-stone-50">
                   Logga ut

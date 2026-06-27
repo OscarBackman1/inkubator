@@ -79,6 +79,7 @@ export async function runMaterialityAnalysis(input: {
 export async function runSufficiencyAnalysis(input: {
   companyId: string;
   assessmentId: string;
+  phase: string;
   materiality: MaterialityResult;
   documentText: string;
 }) {
@@ -144,6 +145,7 @@ export async function runFinalAnalysis(input: {
   companyId: string;
   assessmentId: string;
   companyName: string;
+  phase: string;
   industry: string;
   materiality: MaterialityResult;
   sufficiency: SufficiencyResult;
@@ -202,6 +204,7 @@ export async function runUpdateAnalysis(input: {
   previousDashboard: FinalAnalysisResult;
   narrative: string;
   companyName: string;
+  phase: string;
   materiality: MaterialityResult;
   sufficiency: SufficiencyResult;
 }) {
@@ -286,7 +289,7 @@ async function markJobFailed(jobId: string, error: unknown) {
     where: { id: jobId },
     data: {
       status: "FAILED",
-      error: error instanceof Error ? error.message : "Okänt AI-fel",
+      error: error instanceof Error ? error.message : "Okänt analysfel",
       completedAt: new Date()
     }
   });

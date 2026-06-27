@@ -91,7 +91,7 @@ export default async function CompaniesPage({
               </div>
               <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <dt className="text-stone-500">Score</dt>
+                  <dt className="text-stone-500">Poäng</dt>
                   <dd className="text-xl font-semibold">{dashboard?.scores.overall ?? "-"}</dd>
                 </div>
                 <div>

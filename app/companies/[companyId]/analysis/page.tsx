@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
 import { AiSubmitButton } from "@/components/AiSubmitButton";
+import { AspectCodeBadge } from "@/components/AspectCodeBadge";
 import { Badge } from "@/components/Badge";
 import { FileDropInput } from "@/components/FileDropInput";
 import { Stepper } from "@/components/Stepper";
 import { finalizeAnalysisAction, uploadInformationAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
+import { createCategoryAspectDisplayCodes } from "@/lib/sustainability/aspectCodes";
 import { categoryLabels } from "@/lib/sustainability/labels";
 import type { SufficiencyResult } from "@/lib/ai/schemas";
 
@@ -29,6 +31,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
     redirect(`/companies/${company.id}/dashboard`);
   }
   const sufficiency = assessment.sufficiencyJson as SufficiencyResult | null;
+  const aspectDisplayCodes = sufficiency ? createCategoryAspectDisplayCodes(sufficiency.aspectChecks) : [];
 
   return (
     <div>
@@ -61,9 +64,9 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
           />
           <AiSubmitButton
             idleLabel="Kör informationsgapanalys"
-            pendingLabel="Analyserar informationsgap..."
-            pendingTitle="Informationsgap analyseras"
-            pendingDescription="AI:n jämför underlaget med de väsentliga områdena och väljer högst en relevant kompletteringsfråga per område."
+            pendingLabel="Granskar informationsgap..."
+            pendingTitle="Informationsgap granskas"
+            pendingDescription="Underlaget jämförs med de väsentliga områdena för att välja högst en relevant kompletteringsfråga per område."
             fallbackHref={`/companies/${company.id}/analysis`}
             className="mt-5"
           />
@@ -85,14 +88,15 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
           </section>
 
           <form action={finalizeAnalysisAction.bind(null, company.id, assessment.id)} className="space-y-4">
-            {sufficiency.aspectChecks.map((check) => {
+            {sufficiency.aspectChecks.map((check, index) => {
               const question = assessment.gapQuestions.find((item) => item.aspectCode === check.code);
               return (
                 <article key={check.code} className="rounded border border-stone-200 bg-white p-5 shadow-soft">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-lg font-semibold">
-                        {check.code} {check.name}
+                      <h3 className="flex flex-wrap items-center gap-2 text-lg font-semibold">
+                        <AspectCodeBadge category={check.category} code={aspectDisplayCodes[index]} />
+                        <span>{check.name}</span>
                       </h3>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Badge tone="info">{categoryLabels[check.category]}</Badge>
@@ -154,7 +158,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
               idleLabel="Jag har kompletterat det jag kan – fortsätt"
               pendingLabel="Skapar dashboard..."
               pendingTitle="Samlad bedömning skapas"
-              pendingDescription="AI:n väger affärsmodell, impactnivå, riskindikator, informationskvalitet, risker, möjligheter och diskussionsfrågor."
+              pendingDescription="Affärsmodell, impactnivå, riskindikator, informationskvalitet, risker, möjligheter och diskussionsfrågor vägs samman."
               fallbackHref={`/companies/${company.id}/dashboard`}
               className="px-5 py-2.5"
             />

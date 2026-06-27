@@ -1,9 +1,17 @@
 import { redirect } from "next/navigation";
+import { AspectCodeBadge } from "@/components/AspectCodeBadge";
 import { Badge } from "@/components/Badge";
 import { Stepper } from "@/components/Stepper";
 import { approveMaterialityAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
-import { categoryLabels, phaseLabels } from "@/lib/sustainability/labels";
+import { createCategoryAspectDisplayCodes } from "@/lib/sustainability/aspectCodes";
+import {
+  categoryLabels,
+  confidenceLabels,
+  materialityDriverDescriptions,
+  materialityDriverLabels,
+  phaseLabels
+} from "@/lib/sustainability/labels";
 import type { MaterialityResult } from "@/lib/ai/schemas";
 
 export default async function MaterialityPage({ params }: { params: Promise<{ companyId: string }> }) {
@@ -23,6 +31,13 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
       </div>
     );
   }
+
+  const allAspectDisplayCodes = createCategoryAspectDisplayCodes([
+    ...materiality.selectedAspects,
+    ...materiality.consideredButNotMaterial
+  ]);
+  const selectedAspectDisplayCodes = allAspectDisplayCodes.slice(0, materiality.selectedAspects.length);
+  const consideredAspectDisplayCodes = allAspectDisplayCodes.slice(materiality.selectedAspects.length);
 
   return (
     <div>
@@ -46,17 +61,18 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
         <section>
           <h2 className="mb-3 text-xl font-semibold">Vi kommer att bedöma följande väsentliga områden</h2>
           <div className="grid gap-4">
-            {materiality.selectedAspects.map((aspect) => (
+            {materiality.selectedAspects.map((aspect, index) => (
               <article key={aspect.code} className="rounded border border-stone-200 bg-white p-5 shadow-soft">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold">
-                      {aspect.code} {aspect.name}
+                    <h3 className="flex flex-wrap items-center gap-2 text-lg font-semibold">
+                      <AspectCodeBadge category={aspect.category} code={selectedAspectDisplayCodes[index]} />
+                      <span>{aspect.name}</span>
                     </h3>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Badge tone="info">{categoryLabels[aspect.category]}</Badge>
                       <Badge>{aspect.status === "MATERIAL" ? "Väsentlig" : "Osäker"}</Badge>
-                      <Badge>Confidence {aspect.confidence}</Badge>
+                      <Badge>Säkerhet: {confidenceLabels[aspect.confidence]}</Badge>
                     </div>
                   </div>
                   <select
@@ -75,8 +91,18 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
                     <p className="mt-1 text-sm text-stone-600">{aspect.underlyingAspects.join(", ")}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Drivare</p>
-                    <p className="mt-1 text-sm text-stone-600">{aspect.materialityDrivers.join(", ")}</p>
+                    <p className="text-sm font-medium">Skäl till prioritering</p>
+                    <ul className="mt-2 space-y-2 text-sm text-stone-600">
+                      {aspect.materialityDrivers.map((driver) => (
+                        <li key={driver} className="flex gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-forest" />
+                          <span>
+                            <span className="font-medium text-stone-800">{materialityDriverLabels[driver]}:</span>{" "}
+                            {materialityDriverDescriptions[driver]}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
                 <p className="mt-4 leading-7 text-stone-700">{aspect.rationale}</p>
@@ -111,10 +137,11 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
         <details className="rounded border border-stone-200 bg-white p-5">
           <summary className="font-semibold">Följande områden bedöms inte vara väsentliga i nuläget</summary>
           <div className="mt-4 grid gap-3">
-            {materiality.consideredButNotMaterial.map((aspect) => (
+            {materiality.consideredButNotMaterial.map((aspect, index) => (
               <div key={aspect.code} className="rounded bg-stone-50 p-3 text-sm">
-                <p className="font-medium">
-                  {aspect.code} {aspect.name}
+                <p className="flex flex-wrap items-center gap-2 font-medium">
+                  <AspectCodeBadge category={aspect.category} code={consideredAspectDisplayCodes[index]} />
+                  <span>{aspect.name}</span>
                 </p>
                 <p className="mt-1 text-stone-600">{aspect.rationale}</p>
               </div>

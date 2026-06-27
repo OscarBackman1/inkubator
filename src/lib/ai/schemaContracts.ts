@@ -31,7 +31,13 @@ Om question finns: question, missingInformation, whyThisMattersForFinalAssessmen
 Tillåtna severity: REQUIRED, RECOMMENDED.
 confidence måste vara LOW, MEDIUM eller HIGH, inte en siffra.
 Ställ högst en fråga per aspekt.
-Inuti question-objektet ska missingInformation och exampleHelpfulEvidence vara string, inte arrays.`,
+Inuti question-objektet ska missingInformation och exampleHelpfulEvidence vara string, inte arrays.
+Frågan i question.question ska vara konkret och kunna besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
+Undvik tekniska termer, förkortningar och fackspråk som ack, alerts, notifieringslogik, implementation, scope-data, regulatorisk bedömning eller juridisk analys.
+Fråga efter observerbara fakta, erfarenheter, feedback, resultat, beslut eller arbetssätt som rimligen finns hos ett bolag i input.phase.
+För SCREENING ska frågan kunna besvaras utan pilotresultat, dokumenterade arbetssätt, mätetal, policyer eller tekniska lösningar. Fråga hellre vad bolaget vet, antar, har observerat eller vill testa.
+För BOOST_CHAMBER och INKUBATOR kan frågan handla om tidiga tester, kunddialoger, feedback och praktiska beslut.
+För ACCELERATOR kan frågan handla om återkommande arbetssätt eller resultat, men fortfarande utan krav på formell rapportering.`,
 
   final: `Returnera exakt ett JSON-objekt med:
 - executiveSummary
@@ -58,12 +64,17 @@ Tillåtna riskIndicator.level: BALANCED, SOME_IMBALANCE, SIGNIFICANT_IMBALANCE.
 Tillåtna priority/severity/potential: LOW, MEDIUM, HIGH.
 Tillåtna timeHorizon: SHORT, MEDIUM, LONG.
 För risks och opportunities måste category vara ENVIRONMENT, SOCIAL, GOVERNANCE eller CUSTOM. Använd inte BUSINESS.
-greenwashingRisks måste vara array av objekt med claimOrRisk, whyRisky och howToSubstantiate, inte array av strings.`,
+greenwashingRisks måste vara array av objekt med claimOrRisk, whyRisky och howToSubstantiate, inte array av strings.
+Varje discussionQuestions.question ska vara konkret och kunna besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
+Undvik tekniska termer, förkortningar och fackspråk. Fråga efter observerbara fakta, erfarenheter, feedback, resultat, beslut eller arbetssätt, inte hur något tekniskt implementeras.
+Anpassa frågorna efter input.phase. För tidiga faser ska frågorna handla om antaganden, planerade tester, kunddialoger eller tidiga observationer, inte etablerade processer eller mätdata.`,
 
   update: `Returnera exakt ett JSON-objekt med:
 - updatedDashboard: samma struktur som FinalAnalysisResult
 - deltaSummary: whatChangedSinceLastAssessment, newRisks, reducedRisks, newOpportunities, optional changedImpactLevel, optional changedRiskIndicator, changedScores, recommendedNextDiscussions
 
 changedScores items ska ha category, previousScore, newScore, reason.
-Tillåtna category: OVERALL, ENVIRONMENT, SOCIAL, GOVERNANCE.`
+Tillåtna category: OVERALL, ENVIRONMENT, SOCIAL, GOVERNANCE.
+recommendedNextDiscussions ska vara konkreta frågor som kan besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
+Anpassa recommendedNextDiscussions efter input.phase och fråga inte efter underlag som är mer moget än bolagets fas.`
 } as const;

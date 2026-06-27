@@ -76,11 +76,11 @@ export function mockMateriality(input: MaterialityInput): MaterialityResult {
     materialityStrength: 4,
     materialityDrivers: ["RISK", "USER_IMPACT", "REGULATORY"],
     underlyingAspects: isHealth
-      ? ["Patientsäkerhet", "Dataskydd", "Ansvarsfull AI", "Tillgänglighet"]
-      : ["Dataskydd", "Informationssäkerhet", "Ansvarsfull AI", "Transparens"],
+      ? ["Patientsäkerhet", "Dataskydd", "Ansvarsfull automatisering", "Tillgänglighet"]
+      : ["Dataskydd", "Informationssäkerhet", "Ansvarsfull automatisering", "Transparens"],
     rationale: isHealth
       ? "Konsumenter och slutanvändare handlar om hur lösningen påverkar personer som använder eller berörs av produkten. Området bedöms vara väsentligt eftersom hälsorelaterade lösningar har en direkt koppling till användares trygghet, tillgänglighet och beslut."
-      : "Affärsetik och bolagsstyrning handlar om ansvar, datahantering, transparens och förtroende i hur bolaget utvecklar och erbjuder sin lösning. Området bedöms vara väsentligt eftersom digitala och AI-stödda affärsmodeller ofta bygger på information och relationer där tydliga principer påverkar kundernas förtroende.",
+      : "Affärsetik och bolagsstyrning handlar om ansvar, datahantering, transparens och förtroende i hur bolaget utvecklar och erbjuder sin lösning. Området bedöms vara väsentligt eftersom digitala och datadrivna affärsmodeller ofta bygger på information och relationer där tydliga principer påverkar kundernas förtroende.",
     startupSpecificReason:
       "Det är rimligt att diskutera principer, ansvar och riskförståelse tidigt även om bolaget ännu saknar formella policys.",
     futureDevelopmentRelevance:
@@ -126,8 +126,10 @@ export function mockMateriality(input: MaterialityInput): MaterialityResult {
 export function mockSufficiency(input: {
   materiality: MaterialityResult;
   documentText: string;
+  phase?: string;
 }): SufficiencyResult {
   const enoughText = input.documentText.trim().length > 500;
+  const isEarlyPhase = !input.phase || input.phase === "SCREENING" || input.phase === "BOOST_CHAMBER";
   const aspectChecks: SufficiencyResult["aspectChecks"] = input.materiality.selectedAspects.map((aspect) => {
     const partial = enoughText || aspect.confidence === "HIGH";
     return {
@@ -143,14 +145,18 @@ export function mockSufficiency(input: {
         "Hur bolaget tänker hantera området när produkten, kundbasen eller värdekedjan växer."
       ],
       question: {
-        question: `Hur tänker ni kring ${aspect.underlyingAspects[0]?.toLowerCase() ?? "detta område"} när bolaget växer, och vilka principer eller vägval ser ni redan nu som viktiga?`,
+        question: isEarlyPhase
+          ? `Vad vet ni redan idag om ${aspect.underlyingAspects[0]?.toLowerCase() ?? "detta område"}, och vilka antaganden vill ni testa i nästa steg?`
+          : `Vilka erfarenheter, resultat eller kundinsikter har ni hittills kring ${aspect.underlyingAspects[0]?.toLowerCase() ?? "detta område"}, och vad är fortfarande osäkert inför nästa steg?`,
         missingInformation:
-          "Det saknas en tydlig bild av framtida vägval, ansvar och möjliga riskreducerande beslut.",
+          "Det saknas konkreta exempel på vad bolaget redan vet, har sett, lärt sig eller vill testa inom området.",
         whyThisMattersForFinalAssessment:
-          "Svaret hjälper Movexum att bedöma om potentialen stöds av realistisk riskförståelse.",
+          "Svaret hjälper Movexum att skilja mellan tidiga antaganden, faktiska erfarenheter och frågor som behöver följas upp i coachningen.",
         severity: "RECOMMENDED",
         exampleHelpfulEvidence:
-          "Kort fritext, kundinsikter, teknisk beskrivning, beslutsprinciper eller relevanta utdrag ur pitchdeck."
+          isEarlyPhase
+            ? "Kort fritext, grundarnas antaganden, kundsamtal, planerade tester eller relevanta utdrag ur pitchdeck."
+            : "Kort fritext, användarfeedback, pilotlärdomar, kundinsikter eller relevanta utdrag ur pitchdeck."
       },
       confidence: "MEDIUM"
     };
@@ -172,6 +178,7 @@ export function mockSufficiency(input: {
 
 export function mockFinalAnalysis(input: {
   companyName: string;
+  phase?: string;
   industry: string;
   materiality: MaterialityResult;
   sufficiency: SufficiencyResult;
@@ -186,7 +193,7 @@ export function mockFinalAnalysis(input: {
     executiveSummary:
       `${input.companyName} har en tydlig möjlighet att bygga hållbarhet in i affärsutvecklingen, men analysen behöver läsas som ett första beslutsstöd. Potentialen ligger främst i hur lösningen kan skala med lägre negativ påverkan och högre nytta för kunder eller användare. Den största svagheten är att flera framtida vägval ännu inte är konkretiserade.`,
     companySustainabilityDescription:
-      "Bolaget bör bedömas utifrån affärsmodellens framtida konsekvenser snarare än dagens interna hållbarhetsmognad. Fokus ligger på värdekedja, användarpåverkan, data/AI och trovärdig kommunikation.",
+      "Bolaget bör bedömas utifrån affärsmodellens framtida konsekvenser snarare än dagens interna hållbarhetsmognad. Fokus ligger på värdekedja, användarpåverkan, data, automatisering och trovärdig kommunikation.",
     businessModelCompatibility: {
       status: "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY",
       rationale:
@@ -214,13 +221,13 @@ export function mockFinalAnalysis(input: {
     },
     scoreRationale: {
       overall:
-        "Scoren väger positiv potential, riskexponering, informationskvalitet och rimliga startupnästa steg.",
+        "Poängen väger positiv potential, riskexponering, informationskvalitet och rimliga nästa steg för en startup.",
       environment:
-        "Miljöscoren påverkas främst av klimat- eller resursfrågor kopplade till skalning och värdekedja.",
+        "Miljöpoängen påverkas främst av klimat- eller resursfrågor kopplade till skalning och värdekedja.",
       social:
-        "Social score påverkas av användarpåverkan, tillgänglighet, dataskydd och möjlig påverkan på kunder eller patienter.",
+        "Den sociala poängen påverkas av användarpåverkan, tillgänglighet, dataskydd och möjlig påverkan på kunder eller patienter.",
       governance:
-        "Styrningsscoren hålls tillbaka av att ansvar, transparens och riskrutiner ännu är tidiga."
+        "Poängen för styrning hålls tillbaka av att ansvar, transparens och riskrutiner ännu är tidiga."
     },
     informationQualityScore: input.sufficiency.overallInformationQuality,
     informationQualityRationale:
@@ -281,18 +288,18 @@ export function mockFinalAnalysis(input: {
     discussionQuestions: [
       {
         question:
-          "Vilket hållbarhetsrelaterat vägval riskerar att bli svårt att ändra om ni väntar för länge?",
-        whyImportant: "Frågan hjälper teamet att prioritera tidiga beslut med stor framtida effekt."
+          "Vilka beslut de kommande 3-6 månaderna tror ni får störst betydelse för bolagets hållbarhetspåverkan när ni växer?",
+        whyImportant: "Frågan hjälper teamet att prioritera tidiga vägval som fortfarande går att påverka."
       },
       {
         question:
-          "Vilken positiv effekt vill ni kunna visa med enkel evidens redan i pilotfasen?",
-        whyImportant: "Det minskar risken för breda påståenden utan stöd."
+          "Vilken feedback eller vilka resultat från pilot, kunder eller användare skulle visa att lösningen faktiskt skapar nytta?",
+        whyImportant: "Det minskar risken för breda påståenden utan stöd och gör nyttan lättare att följa upp."
       },
       {
         question:
-          "Vilka risker kan öka om ni lyckas snabbt och får fler kunder än planerat?",
-        whyImportant: "Snabb skalning kan förstärka både positiva och negativa konsekvenser."
+          "Vad har ni redan märkt kan bli svårare att hantera om ni snabbt får fler kunder, användare eller leverantörer?",
+        whyImportant: "Svaret gör det lättare att se praktiska risker innan de växer med bolaget."
       }
     ],
     greenwashingRisks: [
@@ -321,6 +328,7 @@ export function mockUpdateAnalysis(input: {
   previousDashboard: FinalAnalysisResult;
   narrative: string;
   companyName: string;
+  phase?: string;
   materiality: MaterialityResult;
   sufficiency: SufficiencyResult;
 }): UpdateAnalysisResult {
@@ -362,8 +370,8 @@ export function mockUpdateAnalysis(input: {
         }
       ],
       recommendedNextDiscussions: [
-        "Vad i uppdateringen bör påverka bolagets viktigaste prioriteringar kommande kvartal?",
-        "Vilka nya antaganden behöver testas med kunder eller partners?"
+        "Vad har ni lärt er sedan förra bedömningen som bör påverka era viktigaste prioriteringar kommande kvartal?",
+        "Vilka antaganden vill ni testa med kunder, användare eller partners innan ni fattar nästa större beslut?"
       ]
     }
   };

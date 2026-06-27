@@ -56,7 +56,7 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
           Vad kan du berätta om bolagets hållbarhetsambitioner, viktiga vägval eller arbete med miljömässiga, sociala eller styrningsfrågor?
           <span className="mt-2 block rounded bg-stone-50 p-3 text-sm font-normal leading-6 text-stone-600">
             Skriv fritt även om arbetet är tidigt eller osäkert. Nämn gärna nuläge, prioriteringar, affärsmodell,
-            kundgrupp, teknik, geografi, produktion, leverantörer, data/AI, team och frågor ni redan ser som viktiga.
+            kundgrupp, teknik, geografi, produktion, leverantörer, data, team och frågor ni redan ser som viktiga.
           </span>
           <textarea
             name="journeyText"
@@ -67,9 +67,9 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
         </label>
         <AiSubmitButton
           idleLabel="Skapa företag"
-          pendingLabel="Skapar och analyserar..."
-          pendingTitle="Väsentlighetsanalys körs"
-          pendingDescription="AI:n läser idébeskrivningen, branschen och bolagets hållbarhetsambitioner för att identifiera de mest relevanta områdena."
+          pendingLabel="Skapar bedömning..."
+          pendingTitle="Väsentlighetsbedömning tas fram"
+          pendingDescription="Idébeskrivningen, branschen och bolagets hållbarhetsambitioner vägs samman för att identifiera de mest relevanta områdena."
         />
       </form>
     </AppShell>
