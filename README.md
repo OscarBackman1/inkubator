@@ -1,6 +1,6 @@
 # Movexum Impact Navigator
 
-En webbaserad prototyp för Movexums interna hållbarhets- och impactbedömning av startups. Verktyget är byggt för att bedöma affärsidéns framtida potential, risker, informationskvalitet och coachande diskussionsfrågor, inte formell CSRD- eller VSME-compliance.
+En webbaserad prototyp för Movexums interna hållbarhets- och impactbedömning av startups. Verktyget är byggt för att bedöma affärsidéns framtida potential, risker, informationskvalitet och coachande diskussionsfrågor med textbaserade områdesbedömningar, inte formell CSRD- eller VSME-compliance.
 
 ## Kom igång
 

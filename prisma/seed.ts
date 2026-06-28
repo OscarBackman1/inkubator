@@ -5,6 +5,7 @@ import {
   mockMateriality,
   mockSufficiency
 } from "../src/lib/ai/mock";
+import { PROMPT_VERSION } from "../src/lib/ai/prompts";
 
 const prisma = new PrismaClient();
 
@@ -99,7 +100,7 @@ async function main() {
         dashboardJson: index === 0 ? dashboard : undefined,
         informationQualityScore: index === 0 ? dashboard.informationQualityScore : undefined,
         modelName: "mock",
-        promptVersion: "2026-06-23-v1",
+        promptVersion: PROMPT_VERSION,
         inputHash: `seed-${index}`,
         createdById: admin.id,
         completedAt: index === 0 ? new Date() : undefined

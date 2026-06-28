@@ -4,11 +4,17 @@ import { Badge } from "@/components/Badge";
 import { FileDropInput } from "@/components/FileDropInput";
 import { ImpactLevelBadge } from "@/components/ImpactLevelBadge";
 import { RiskIndicatorBadge } from "@/components/RiskIndicatorBadge";
-import { ScoreGauge } from "@/components/ScoreGauge";
 import { Stepper } from "@/components/Stepper";
 import { updateCompanyAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
-import { phaseLabels } from "@/lib/sustainability/labels";
+import { getAreaAssessmentItems, type AreaAssessmentItem } from "@/lib/sustainability/areaAssessments";
+import { getDashboardInformationComment } from "@/lib/sustainability/informationQuality";
+import {
+  businessModelCompatibilityDescriptions,
+  businessModelCompatibilityLabels,
+  phaseLabels,
+  priorityLabels
+} from "@/lib/sustainability/labels";
 import type { FinalAnalysisResult } from "@/lib/ai/schemas";
 
 export const maxDuration = 120;
@@ -23,10 +29,13 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
   const assessment = company.assessments[0];
   const dashboard = assessment?.dashboardJson as FinalAnalysisResult | null;
   if (!assessment || !dashboard) redirect(`/companies/${company.id}/analysis`);
+  const areaAssessments = getAreaAssessmentItems(dashboard);
+  const overallAssessment = areaAssessments[0];
+  const categoryAssessments = areaAssessments.slice(1);
 
   return (
     <div>
-      <Stepper current={3} />
+      <Stepper current={3} companyId={company.id} />
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-wide text-stone-500">Dashboard · Version {assessment.version}</p>
@@ -37,16 +46,12 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
         </div>
       </div>
 
-      <section className="mb-5 rounded border border-stone-200 bg-white p-5 shadow-soft">
-        <h2 className="text-lg font-semibold">Sammanfattning</h2>
-        <p className="mt-3 leading-7 text-stone-700">{dashboard.executiveSummary}</p>
-      </section>
+      <AreaAssessmentCard item={overallAssessment} featured />
 
-      <div className="mb-5 grid gap-4 lg:grid-cols-4">
-        <ScoreGauge label="Samlad bedömning" score={dashboard.scores.overall} />
-        <ScoreGauge label="Miljö" score={dashboard.scores.environment} />
-        <ScoreGauge label="Socialt & mänskliga rättigheter" score={dashboard.scores.social} />
-        <ScoreGauge label="Etik & styrning" score={dashboard.scores.governance} />
+      <div className="mb-5 grid gap-4 xl:grid-cols-3">
+        {categoryAssessments.map((item) => (
+          <AreaAssessmentCard key={item.key} item={item} />
+        ))}
       </div>
 
       <div className="grid gap-5 xl:grid-cols-2">
@@ -62,16 +67,15 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
               <p className="mt-2 leading-7 text-stone-700">{dashboard.impactLevel.rationale}</p>
             </div>
             <div className="border-t border-stone-100 pt-4">
-              <p className="text-sm font-medium text-stone-500">Affärsmodellens grundförutsättning</p>
+              <p className="text-sm font-medium text-stone-500">Affärsmodellens riktning</p>
               <div className="mt-2">
-                <Badge tone={dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY" ? "good" : "warn"}>
-                  {dashboard.businessModelCompatibility.status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY"
-                    ? "Förenlig med långsiktigt hållbar utveckling"
-                    : dashboard.businessModelCompatibility.status === "HARMFUL_OR_RISKY"
-                      ? "Skadlig eller riskfylld"
-                      : "Osäker"}
+                <Badge tone={businessModelCompatibilityTone(dashboard.businessModelCompatibility.status)}>
+                  {businessModelCompatibilityLabels[dashboard.businessModelCompatibility.status]}
                 </Badge>
               </div>
+              <p className="mt-2 text-sm text-stone-600">
+                {businessModelCompatibilityDescriptions[dashboard.businessModelCompatibility.status]}
+              </p>
               <p className="mt-3 leading-7 text-stone-700">{dashboard.businessModelCompatibility.rationale}</p>
               <p className="mt-2 text-sm text-stone-600">{dashboard.businessModelCompatibility.consequencesIfScaled}</p>
             </div>
@@ -93,7 +97,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
             <div key={item.title} className="border-b border-stone-100 py-3 last:border-0">
               <div className="flex items-center gap-2">
                 <h3 className="font-medium">{item.title}</h3>
-                <Badge tone={item.priority === "HIGH" ? "risk" : item.priority === "MEDIUM" ? "warn" : "neutral"}>{item.priority}</Badge>
+                <Badge tone={item.priority === "HIGH" ? "risk" : item.priority === "MEDIUM" ? "warn" : "neutral"}>
+                  {priorityLabels[item.priority]}
+                </Badge>
               </div>
               <p className="mt-1 text-sm text-stone-600">{item.description}</p>
               <p className="mt-1 text-sm font-medium text-forest">{item.realisticStartupNextStep}</p>
@@ -143,8 +149,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
       </div>
 
       <section className="mt-5 rounded border border-stone-200 bg-white p-5 shadow-soft">
-        <h2 className="text-lg font-semibold">Informationskvalitet och begränsningar</h2>
-        <p className="mt-3 text-stone-700">{dashboard.informationQualityScore}/100 · {dashboard.informationQualityRationale}</p>
+        <h2 className="text-lg font-semibold">Informationsläge och begränsningar</h2>
+        <p className="mt-3 text-stone-700">{getDashboardInformationComment(dashboard)}</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <List title="Antaganden" items={dashboard.assumptions} />
           <List title="Begränsningar" items={dashboard.limitations} />
@@ -173,11 +179,46 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
             idleLabel="Skapa ny analysversion"
             pendingLabel="Uppdaterar analys..."
             pendingTitle="Ny analysversion skapas"
-            pendingDescription="Tidigare dashboard jämförs med ny information för att markera förändrade risker, möjligheter, poäng och diskussionsfrågor."
+            pendingDescription="Tidigare dashboard jämförs med ny information för att markera förändrade risker, möjligheter, bedömningstexter och diskussionsfrågor."
             fallbackHref={`/companies/${company.id}/dashboard`}
           />
         </form>
       </section>
+    </div>
+  );
+}
+
+function businessModelCompatibilityTone(
+  status: FinalAnalysisResult["businessModelCompatibility"]["status"]
+): "good" | "warn" | "risk" {
+  if (status === "COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY") return "good";
+  if (status === "HARMFUL_OR_RISKY") return "risk";
+  return "warn";
+}
+
+function AreaAssessmentCard({ item, featured = false }: { item: AreaAssessmentItem; featured?: boolean }) {
+  return (
+    <section className={`${featured ? "mb-5" : ""} rounded border border-stone-200 bg-white p-5 shadow-soft`}>
+      <p className="text-sm font-medium uppercase tracking-wide text-stone-500">{item.title}</p>
+      <p className={`${featured ? "text-xl" : "text-base"} mt-2 font-semibold text-ink`}>
+        Potential: {item.potentialLabel}
+      </p>
+      <p className="mt-3 leading-7 text-stone-700">{item.assessment}</p>
+      <UncertaintyNotes notes={item.uncertaintyNotes} />
+    </section>
+  );
+}
+
+function UncertaintyNotes({ notes }: { notes: string[] }) {
+  if (!notes.length) return null;
+  return (
+    <div className="mt-4 rounded bg-stone-50 p-3 text-sm text-stone-600">
+      <p className="font-medium text-stone-700">Osäkerheter och saknad information</p>
+      <ul className="mt-2 list-disc space-y-1 pl-5">
+        {notes.map((note) => (
+          <li key={note}>{note}</li>
+        ))}
+      </ul>
     </div>
   );
 }

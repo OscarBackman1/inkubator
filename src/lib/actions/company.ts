@@ -112,8 +112,12 @@ export async function approveMaterialityAction(companyId: string, assessmentId: 
   if (!materiality) redirect(`/companies/${companyId}/materiality?error=no-materiality`);
 
   const overrideWrites: Array<Promise<unknown>> = [];
+  const summaryComment = String(formData.get("summaryComment") ?? "").trim();
   const updated: MaterialityResult = {
     ...materiality,
+    companySummary: summaryComment
+      ? `${materiality.companySummary}\n\nAnvändarkorrigering av bolagssummering: ${summaryComment}`
+      : materiality.companySummary,
     selectedAspects: materiality.selectedAspects.map((aspect) => {
       const newStatus = String(formData.get(`status-${aspect.code}`) ?? aspect.status);
       const comment = String(formData.get(`comment-${aspect.code}`) ?? "").trim();

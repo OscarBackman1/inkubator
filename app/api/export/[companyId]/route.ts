@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
+import { getAreaAssessmentItems } from "@/lib/sustainability/areaAssessments";
 import type { FinalAnalysisResult } from "@/lib/ai/schemas";
 
 export async function GET(_request: Request, context: { params: Promise<{ companyId: string }> }) {
@@ -15,6 +16,7 @@ export async function GET(_request: Request, context: { params: Promise<{ compan
   if (!company || !assessment || !dashboard) {
     return new NextResponse("Rapport saknas.", { status: 404 });
   }
+  const areaAssessments = getAreaAssessmentItems(dashboard);
 
   const html = `<!doctype html>
 <html lang="sv">
@@ -25,29 +27,22 @@ export async function GET(_request: Request, context: { params: Promise<{ compan
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17211f; margin: 40px; line-height: 1.6; }
     h1, h2 { line-height: 1.2; }
     .meta, .muted { color: #666; }
-    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .box { border: 1px solid #ddd; padding: 14px; border-radius: 6px; }
+    .area { border: 1px solid #ddd; padding: 14px; border-radius: 6px; margin: 12px 0; }
+    .area p { margin: 8px 0 0; }
     @media print { body { margin: 20mm; } }
   </style>
 </head>
 <body>
   <h1>${escapeHtml(company.name)}</h1>
   <p class="meta">Analysversion ${assessment.version} · ${assessment.createdAt.toLocaleDateString("sv-SE")} · ${escapeHtml(company.industry)}</p>
-  <h2>Sammanfattning</h2>
-  <p>${escapeHtml(dashboard.executiveSummary)}</p>
+  <h2>Områdesbedömningar</h2>
+  ${areaAssessments.map(areaSection).join("")}
   <h2>Grundläggande affärsmodellbedömning</h2>
   <p><strong>Placering i bedömningsmatrisen: ${escapeHtml(dashboard.impactLevel.labelSv)}</strong></p>
   <p>${escapeHtml(dashboard.impactLevel.rationale)}</p>
   <p>${escapeHtml(dashboard.businessModelCompatibility.rationale)}</p>
   <h2>Riskbild</h2>
   <p><strong>${escapeHtml(dashboard.riskIndicator.labelSv)}</strong>: ${escapeHtml(dashboard.riskIndicator.rationale)}</p>
-  <h2>Poäng</h2>
-  <div class="grid">
-    <div class="box">Samlad<br><strong>${dashboard.scores.overall}</strong></div>
-    <div class="box">Miljö<br><strong>${dashboard.scores.environment}</strong></div>
-    <div class="box">Socialt<br><strong>${dashboard.scores.social}</strong></div>
-    <div class="box">Styrning<br><strong>${dashboard.scores.governance}</strong></div>
-  </div>
   ${section("Vad bolaget behöver arbeta med", dashboard.whatCompanyNeedsToWorkOn.map((item) => `${item.title}: ${item.realisticStartupNextStep}`))}
   ${section("Risker", dashboard.risks.map((item) => `${item.title}: ${item.mitigationSuggestion}`))}
   ${section("Möjligheter", dashboard.opportunities.map((item) => `${item.title}: ${item.recommendedAction}`))}
@@ -76,6 +71,13 @@ function escapeHtml(input: string) {
     const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
     return entities[char] ?? char;
   });
+}
+
+function areaSection(item: { title: string; potentialLabel: string; assessment: string; uncertaintyNotes: string[] }) {
+  const uncertainties = item.uncertaintyNotes.length
+    ? `<p class="muted"><strong>Osäkerheter:</strong> ${escapeHtml(item.uncertaintyNotes.join(" "))}</p>`
+    : "";
+  return `<div class="area"><h3>${escapeHtml(item.title)}</h3><p><strong>Potential: ${escapeHtml(item.potentialLabel)}</strong></p><p>${escapeHtml(item.assessment)}</p>${uncertainties}</div>`;
 }
 
 function safeFilename(input: string) {

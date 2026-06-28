@@ -180,7 +180,7 @@ export async function runFinalAnalysis(input: {
         data: {
           dashboardJson: result,
           status: "COMPLETE",
-          informationQualityScore: result.informationQualityScore,
+          informationQualityScore: result.informationQualityScore ?? input.sufficiency.overallInformationQuality,
           completedAt: new Date()
         }
       }),
@@ -267,7 +267,7 @@ export async function runUpdateAnalysis(input: {
           dashboardJson: result.updatedDashboard,
           updateDeltaJson: result.deltaSummary,
           status: "COMPLETE",
-          informationQualityScore: result.updatedDashboard.informationQualityScore,
+          informationQualityScore: result.updatedDashboard.informationQualityScore ?? input.sufficiency.overallInformationQuality,
           completedAt: new Date()
         }
       }),

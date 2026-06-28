@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ImpactLevelBadge } from "@/components/ImpactLevelBadge";
 import { RiskIndicatorBadge } from "@/components/RiskIndicatorBadge";
 import { prisma } from "@/lib/db/prisma";
+import { getAreaAssessmentItems } from "@/lib/sustainability/areaAssessments";
 import type { FinalAnalysisResult } from "@/lib/ai/schemas";
 
 export default async function HistoryPage({ params }: { params: Promise<{ companyId: string }> }) {
@@ -23,6 +24,7 @@ export default async function HistoryPage({ params }: { params: Promise<{ compan
         {company.assessments.map((assessment) => {
           const dashboard = assessment.dashboardJson as FinalAnalysisResult | null;
           const delta = assessment.updateDeltaJson as { newRisks?: string[]; reducedRisks?: string[]; newOpportunities?: string[] } | null;
+          const areaAssessments = getAreaAssessmentItems(dashboard);
           return (
             <article key={assessment.id} className="rounded border border-stone-200 bg-white p-5 shadow-soft">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -37,11 +39,13 @@ export default async function HistoryPage({ params }: { params: Promise<{ compan
                   <RiskIndicatorBadge label={dashboard?.riskIndicator.labelSv} />
                 </div>
               </div>
-              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-4">
-                <div><dt className="text-stone-500">Poäng</dt><dd className="font-semibold">{dashboard?.scores.overall ?? "-"}</dd></div>
-                <div><dt className="text-stone-500">Miljö</dt><dd className="font-semibold">{dashboard?.scores.environment ?? "-"}</dd></div>
-                <div><dt className="text-stone-500">Socialt</dt><dd className="font-semibold">{dashboard?.scores.social ?? "-"}</dd></div>
-                <div><dt className="text-stone-500">Styrning</dt><dd className="font-semibold">{dashboard?.scores.governance ?? "-"}</dd></div>
+              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 xl:grid-cols-4">
+                {areaAssessments.map((item) => (
+                  <div key={item.key}>
+                    <dt className="text-stone-500">{item.title}</dt>
+                    <dd className="font-semibold leading-snug">{dashboard ? item.potentialLabel : "-"}</dd>
+                  </div>
+                ))}
               </dl>
               {delta && (
                 <div className="mt-4 grid gap-3 text-sm md:grid-cols-3">

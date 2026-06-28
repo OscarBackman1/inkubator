@@ -1,21 +1,18 @@
 import Link from "next/link";
 import {
-  BarChart3,
   Building2,
   FileArchive,
   FileText,
   History,
   LayoutDashboard,
   MessageSquareText,
-  PenLine,
   Scale,
   Upload
 } from "lucide-react";
 
 const nav = [
   { label: "Dashboard", href: "dashboard", icon: LayoutDashboard },
-  { label: "Bolagsinformation", href: "materiality", icon: Building2 },
-  { label: "Analys & bedömning", href: "analysis", icon: PenLine },
+  { label: "Väsentliga områden", href: "materiality", icon: Building2 },
   { label: "Dokument", href: "documents", icon: FileArchive },
   { label: "Historik", href: "history", icon: History },
   { label: "Jämförelser", href: "compare", icon: Scale },
@@ -37,7 +34,7 @@ export function Sidebar({
       </div>
       <nav className="space-y-1">
         <Link className="flex items-center gap-2 rounded px-3 py-2 text-sm hover:bg-stone-100" href="/companies">
-          <Building2 className="h-4 w-4" /> Bolag
+          <Building2 className="h-4 w-4" /> Alla bolag
         </Link>
         {companyId &&
           nav.map((item) => {

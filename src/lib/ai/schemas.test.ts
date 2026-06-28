@@ -125,6 +125,9 @@ describe("AI schemas", () => {
 
     const parsed = FinalAnalysisResultSchema.parse(drifted);
 
+    expect(parsed.areaAssessments.overall.potentialLabel).toContain("potential");
+    expect(parsed.areaAssessments.environment.assessment).toContain("miljö");
+    expect(parsed.informationQualityComment).toContain("bedömning");
     expect(parsed.risks.at(-1)?.category).toBe("CUSTOM");
     expect(parsed.opportunities.at(-1)?.category).toBe("CUSTOM");
     expect(parsed.greenwashingRisks[0].claimOrRisk).toContain("klimatnytta");

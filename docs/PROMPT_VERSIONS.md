@@ -1,5 +1,22 @@
 # Promptversioner
 
+## 2026-06-28-v2
+
+Tar bort synlig siffra för informationsläge i slutanalysen.
+
+- `informationQualityComment` ersätter krav på informationspoäng i dashboard-JSON.
+- Kommentaren ska vara mycket kort, svensk och förklara hur underlaget bör läsas.
+- Interna informationsvärden kan fortfarande användas som fallback och för tidigare analysversioner.
+
+## 2026-06-28-v1
+
+Byter slutanalys från synliga hållbarhetspoäng till textbaserade områdesbedömningar.
+
+- `areaAssessments` innehåller övergripande bedömning, miljömässig hållbarhet, social hållbarhet och styrning.
+- Varje område får `potentialLabel`, genomarbetad bedömningstext och osäkerheter.
+- Uppdateringsanalysen markerar ändrade områdesbedömningar i stället för ändrade poäng.
+- Slutanalysen ska fortsatt vara ett coachande beslutsstöd för startups, inte ESG-rapportering eller compliancekontroll.
+
 ## 2026-06-27-v2
 
 Skärpt fasstyrning för frågor.

@@ -91,6 +91,26 @@ const GreenwashingRiskArraySchema = z.preprocess((value) => {
   return value;
 }, z.array(GreenwashingRiskSchema));
 
+const AreaAssessmentSchema = z.object({
+  potentialLabel: FlexibleStringSchema,
+  assessment: FlexibleStringSchema,
+  uncertaintyNotes: StringArraySchema.default([])
+});
+
+const LegacyScoresSchema = z.object({
+  overall: z.number().min(0).max(100),
+  environment: z.number().min(0).max(100),
+  social: z.number().min(0).max(100),
+  governance: z.number().min(0).max(100)
+});
+
+const LegacyScoreRationaleSchema = z.object({
+  overall: z.string(),
+  environment: z.string(),
+  social: z.string(),
+  governance: z.string()
+});
+
 export const MaterialityResultSchema = z.object({
   companySummary: z.string(),
   sustainabilityPerspectiveSummary: z.string(),
@@ -186,20 +206,17 @@ export const FinalAnalysisResultSchema = z.object({
     labelSv: z.string(),
     rationale: z.string()
   }),
-  scores: z.object({
-    overall: z.number().min(0).max(100),
-    environment: z.number().min(0).max(100),
-    social: z.number().min(0).max(100),
-    governance: z.number().min(0).max(100)
+  areaAssessments: z.object({
+    overall: AreaAssessmentSchema,
+    environment: AreaAssessmentSchema,
+    social: AreaAssessmentSchema,
+    governance: AreaAssessmentSchema
   }),
-  scoreRationale: z.object({
-    overall: z.string(),
-    environment: z.string(),
-    social: z.string(),
-    governance: z.string()
-  }),
-  informationQualityScore: z.number().min(0).max(100),
-  informationQualityRationale: z.string(),
+  scores: LegacyScoresSchema.optional(),
+  scoreRationale: LegacyScoreRationaleSchema.optional(),
+  informationQualityComment: z.string(),
+  informationQualityScore: z.number().min(0).max(100).optional(),
+  informationQualityRationale: z.string().optional(),
   whatCompanyNeedsToWorkOn: z.array(
     z.object({
       title: z.string(),
@@ -219,7 +236,7 @@ export const FinalAnalysisResultSchema = z.object({
       whyImportant: z.string(),
       howItCanAffectFutureDevelopment: z.string(),
       mitigationSuggestion: z.string(),
-          evidence: StringArraySchema
+      evidence: StringArraySchema
     })
   ),
   opportunities: z.array(
@@ -232,7 +249,7 @@ export const FinalAnalysisResultSchema = z.object({
       whyImportant: z.string(),
       howCompanyCanUseIt: z.string(),
       recommendedAction: z.string(),
-          evidence: StringArraySchema
+      evidence: StringArraySchema
     })
   ),
   discussionQuestions: z.array(
@@ -258,11 +275,11 @@ export const UpdateAnalysisResultSchema = z.object({
     newOpportunities: StringArraySchema,
     changedImpactLevel: z.string().optional(),
     changedRiskIndicator: z.string().optional(),
-    changedScores: z.array(
+    changedAreaAssessments: z.array(
       z.object({
         category: z.enum(["OVERALL", "ENVIRONMENT", "SOCIAL", "GOVERNANCE"]),
-        previousScore: z.number(),
-        newScore: z.number(),
+        previousPotential: z.string(),
+        newPotential: z.string(),
         reason: z.string()
       })
     ),

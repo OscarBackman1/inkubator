@@ -45,10 +45,8 @@ För ACCELERATOR kan frågan handla om återkommande arbetssätt eller resultat,
 - businessModelCompatibility: status, rationale, consequencesIfScaled
 - impactLevel: level, labelSv, rationale
 - riskIndicator: level, labelSv, rationale
-- scores: overall, environment, social, governance, alla 0-100
-- scoreRationale: overall, environment, social, governance
-- informationQualityScore: 0-100
-- informationQualityRationale
+- areaAssessments: overall, environment, social, governance
+- informationQualityComment
 - whatCompanyNeedsToWorkOn: array med title, description, priority, realisticStartupNextStep
 - risks: array med aspectCode, category, title, description, severity, timeHorizon, whyImportant, howItCanAffectFutureDevelopment, mitigationSuggestion, evidence
 - opportunities: array med aspectCode, category, title, description, potential, whyImportant, howCompanyCanUseIt, recommendedAction, evidence
@@ -63,6 +61,12 @@ Tillåtna impactLevel.level: HARMFUL_RISKY, RISK_EXPOSED, RESPONSIBLE, SUSTAINAB
 Tillåtna riskIndicator.level: BALANCED, SOME_IMBALANCE, SIGNIFICANT_IMBALANCE.
 Tillåtna priority/severity/potential: LOW, MEDIUM, HIGH.
 Tillåtna timeHorizon: SHORT, MEDIUM, LONG.
+Varje areaAssessments-item ska ha potentialLabel, assessment och uncertaintyNotes.
+potentialLabel ska vara en svensk textetikett, t.ex. "Ansvarsfull", "Hållbarhetsdrivande", "Impactdrivande" eller "Ansvarsfull → Hållbarhetsdrivande".
+assessment ska vara 2-4 genomarbetade, coachande meningar som bedömer affärsidéns framtida påverkan, risker och möjligheter inom området. Skriv inte som betyg, ranking eller compliancekontroll.
+overall ska vara en samlad övergripande bedömning av affärsmodellen. environment ska fokusera på miljömässig hållbarhet, social på social hållbarhet och governance på styrning, etik, ansvar och förtroende.
+uncertaintyNotes ska vara string[] och tydligt markera saknad information eller antaganden. Begränsat underlag gör inte ett område oväsentligt.
+informationQualityComment ska vara en mycket kort svensk kommentar på högst 12 ord om hur underlaget bör läsas, t.ex. "Första bedömning möjlig, men antaganden återstår." Använd inte siffror eller /100.
 För risks och opportunities måste category vara ENVIRONMENT, SOCIAL, GOVERNANCE eller CUSTOM. Använd inte BUSINESS.
 greenwashingRisks måste vara array av objekt med claimOrRisk, whyRisky och howToSubstantiate, inte array av strings.
 Varje discussionQuestions.question ska vara konkret och kunna besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
@@ -71,9 +75,9 @@ Anpassa frågorna efter input.phase. För tidiga faser ska frågorna handla om a
 
   update: `Returnera exakt ett JSON-objekt med:
 - updatedDashboard: samma struktur som FinalAnalysisResult
-- deltaSummary: whatChangedSinceLastAssessment, newRisks, reducedRisks, newOpportunities, optional changedImpactLevel, optional changedRiskIndicator, changedScores, recommendedNextDiscussions
+- deltaSummary: whatChangedSinceLastAssessment, newRisks, reducedRisks, newOpportunities, optional changedImpactLevel, optional changedRiskIndicator, changedAreaAssessments, recommendedNextDiscussions
 
-changedScores items ska ha category, previousScore, newScore, reason.
+changedAreaAssessments items ska ha category, previousPotential, newPotential, reason.
 Tillåtna category: OVERALL, ENVIRONMENT, SOCIAL, GOVERNANCE.
 recommendedNextDiscussions ska vara konkreta frågor som kan besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
 Anpassa recommendedNextDiscussions efter input.phase och fråga inte efter underlag som är mer moget än bolagets fas.`

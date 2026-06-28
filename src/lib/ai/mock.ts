@@ -1,4 +1,4 @@
-import { clampScore } from "@/lib/sustainability/scoring";
+import { clampPercentage } from "@/lib/sustainability/scoring";
 import type {
   FinalAnalysisResult,
   MaterialityResult,
@@ -186,8 +186,17 @@ export function mockFinalAnalysis(input: {
 }): FinalAnalysisResult {
   const hasAnswers = input.gapAnswers.some((answer) => answer.trim().length > 20);
   const base = hasAnswers ? 72 : input.sufficiency.overallInformationQuality + 12;
-  const overall = clampScore(base);
+  const potentialSignal = clampPercentage(base);
   const firstAspect = input.materiality.selectedAspects[0];
+  const hasEnvironmentalAspect = input.materiality.selectedAspects.some((aspect) => aspect.category === "ENVIRONMENT");
+  const hasSocialAspect = input.materiality.selectedAspects.some((aspect) => aspect.category === "SOCIAL");
+  const hasGovernanceAspect = input.materiality.selectedAspects.some((aspect) => aspect.category === "GOVERNANCE");
+  const overallPotential =
+    potentialSignal >= 80
+      ? "Impactdrivande potential"
+      : potentialSignal >= 62
+        ? "Hållbarhetsdrivande potential"
+        : "Ansvarsfull → Hållbarhetsdrivande";
 
   return {
     executiveSummary:
@@ -202,8 +211,8 @@ export function mockFinalAnalysis(input: {
         "Om bolaget skalar utan tydliga principer kan positiva effekter försvagas av datarisker, energiberoenden eller otydlig ansvarsfördelning."
     },
     impactLevel: {
-      level: overall >= 80 ? "IMPACT_DRIVEN" : overall >= 62 ? "SUSTAINABILITY_DRIVEN" : "RESPONSIBLE",
-      labelSv: overall >= 80 ? "Impactdrivande" : overall >= 62 ? "Hållbarhetsdrivande" : "Ansvarsfullt",
+      level: potentialSignal >= 80 ? "IMPACT_DRIVEN" : potentialSignal >= 62 ? "SUSTAINABILITY_DRIVEN" : "RESPONSIBLE",
+      labelSv: potentialSignal >= 80 ? "Impactdrivande" : potentialSignal >= 62 ? "Hållbarhetsdrivande" : "Ansvarsfullt",
       rationale:
         "Affärsidén har hållbarhetsrelevant potential, men nivån beror på om bolaget kan omsätta den i konkreta val och validerad kundnytta."
     },
@@ -213,25 +222,46 @@ export function mockFinalAnalysis(input: {
       rationale:
         "Potentialen är tydligare än bolagets beskrivna förmåga att hantera risker, särskilt kring styrning, data och värdekedja."
     },
-    scores: {
-      overall,
-      environment: clampScore(overall - 5),
-      social: clampScore(overall - 2),
-      governance: clampScore(overall - 8)
+    areaAssessments: {
+      overall: {
+        potentialLabel: overallPotential,
+        assessment:
+          `${input.companyName} bedöms ha potential att utvecklas till ett hållbarhets- eller impactdrivande bolag om de tidiga vägvalen kopplas tydligt till kundnytta, riskförståelse och faktisk effekt. Affärsidén verkar inte bygga på uppenbart negativ påverkan, men bolaget befinner sig fortfarande i en fas där antaganden behöver testas. Den viktigaste coachningsfrågan är hur teamet kan göra den positiva potentialen mer verifierbar utan att fastna i mogna rapporteringskrav.`,
+        uncertaintyNotes: [
+          "Underlaget visar främst riktning och antaganden, inte validerad effekt över tid.",
+          "Flera framtida vägval kring skalning, ansvar och uppföljning är ännu otydliga."
+        ]
+      },
+      environment: {
+        potentialLabel: hasEnvironmentalAspect ? "Ansvarsfull → Hållbarhetsdrivande" : "Ansvarsfull",
+        assessment: hasEnvironmentalAspect
+          ? "Den miljömässiga påverkan bedöms främst uppstå genom teknikval, drift, material, leverantörer eller kundernas effektivisering när lösningen skalar. Bolaget kan stärka sin miljöprofil genom att tidigt välja resurssnåla arbetssätt och beskriva vilka miljöeffekter lösningen faktiskt kan påverka hos kund. Potentialen är tydligast om klimat- eller resursnyttan kan kopplas till enkla indikatorer i pilot eller kunddialog."
+          : "Den direkta miljöpåverkan framstår som begränsad utifrån dagens underlag. Om bolaget växer kan miljöfrågorna ändå bli relevanta genom digital drift, inköp, resor, materialval eller kundernas användning av lösningen. Miljöområdet bör därför behandlas som ett ansvarsfullt vägval snarare än som ett rapporteringskrav i nuläget.",
+        uncertaintyNotes: [
+          "Det saknas detaljer om framtida drift, leverantörer, materialflöden eller kundernas faktiska miljönytta."
+        ]
+      },
+      social: {
+        potentialLabel: hasSocialAspect ? "Impactdrivande potential" : "Ansvarsfull → Hållbarhetsdrivande",
+        assessment: hasSocialAspect
+          ? "Den sociala nyttan är central om lösningen förbättrar trygghet, tillgänglighet, arbetsmiljö, hälsa eller användarnas beslut i praktiken. För att bli tydligt impactdrivande behöver bolaget visa vilka människor som påverkas, vilken förbättring de upplever och hur risken för negativa bieffekter hanteras. Tidiga användarinsikter, feedback och exempel på förändrade arbetssätt är mer relevanta än formella policydokument i detta skede."
+          : "Den sociala påverkan är inte fullt utvecklad i underlaget, men kan bli viktig genom användarupplevelse, dataskydd, tillgänglighet, arbetsmiljö eller kundernas förtroende. Bolaget bör tidigt beskriva vem som påverkas av lösningen och vilka praktiska problem den minskar. Om detta kan valideras finns möjlighet att utveckla en starkare social hållbarhetsprofil.",
+        uncertaintyNotes: [
+          "Det saknas tydlig information om användargrupper, tidig feedback och eventuella negativa sociala konsekvenser."
+        ]
+      },
+      governance: {
+        potentialLabel: hasGovernanceAspect ? "Ansvarsfull → Hållbarhetsdrivande" : "Ansvarsfull",
+        assessment:
+          "Styrning och ansvar handlar i den här fasen främst om tydliga principer för data, transparens, kundlöften, riskhantering och vem som ansvarar för viktiga beslut. Bolaget behöver inte ha mogna policies, men bör kunna visa hur de resonerar när lösningen får fler kunder eller större påverkan. Om ansvarsfördelning och trovärdig kommunikation byggs in tidigt kan området bli en styrka i affärsutvecklingen.",
+        uncertaintyNotes: [
+          "Underlaget beskriver ännu begränsat hur ansvar, transparens och riskbeslut ska hanteras när bolaget växer."
+        ]
+      }
     },
-    scoreRationale: {
-      overall:
-        "Poängen väger positiv potential, riskexponering, informationskvalitet och rimliga nästa steg för en startup.",
-      environment:
-        "Miljöpoängen påverkas främst av klimat- eller resursfrågor kopplade till skalning och värdekedja.",
-      social:
-        "Den sociala poängen påverkas av användarpåverkan, tillgänglighet, dataskydd och möjlig påverkan på kunder eller patienter.",
-      governance:
-        "Poängen för styrning hålls tillbaka av att ansvar, transparens och riskrutiner ännu är tidiga."
-    },
+    informationQualityComment:
+      "Första bedömning möjlig, men antaganden återstår.",
     informationQualityScore: input.sufficiency.overallInformationQuality,
-    informationQualityRationale:
-      "Underlaget räcker för en första coachande bedömning men innehåller få verifierbara detaljer om framtida drift, leverantörer och ansvar.",
     whatCompanyNeedsToWorkOn: [
       {
         title: "Beskriv riskprinciper tidigt",
@@ -332,17 +362,55 @@ export function mockUpdateAnalysis(input: {
   materiality: MaterialityResult;
   sufficiency: SufficiencyResult;
 }): UpdateAnalysisResult {
+  const previousAreaAssessments = input.previousDashboard.areaAssessments ?? {
+    overall: {
+      potentialLabel: input.previousDashboard.impactLevel.labelSv,
+      assessment: input.previousDashboard.impactLevel.rationale,
+      uncertaintyNotes: input.previousDashboard.limitations ?? []
+    },
+    environment: {
+      potentialLabel: "Ej tidigare textbedömt",
+      assessment: "Tidigare version saknade en separat miljömässig textbedömning.",
+      uncertaintyNotes: []
+    },
+    social: {
+      potentialLabel: "Ej tidigare textbedömt",
+      assessment: "Tidigare version saknade en separat social textbedömning.",
+      uncertaintyNotes: []
+    },
+    governance: {
+      potentialLabel: "Ej tidigare textbedömt",
+      assessment: "Tidigare version saknade en separat styrningsbedömning.",
+      uncertaintyNotes: []
+    }
+  };
   const changedDashboard: FinalAnalysisResult = {
     ...input.previousDashboard,
     executiveSummary: `${input.previousDashboard.executiveSummary} Sedan förra versionen har bolaget beskrivit ny utveckling: ${input.narrative.slice(0, 180)}.`,
-    scores: {
-      ...input.previousDashboard.scores,
-      overall: clampScore(input.previousDashboard.scores.overall + 4),
-      governance: clampScore(input.previousDashboard.scores.governance + 5)
+    areaAssessments: {
+      ...previousAreaAssessments,
+      overall: {
+        ...previousAreaAssessments.overall,
+        assessment:
+          `${previousAreaAssessments.overall.assessment} Uppdateringen stärker bilden av vilka vägval bolaget arbetar med, men den faktiska effekten behöver fortfarande följas genom kunddialog, pilotlärdomar eller andra tidiga bevis.`,
+        uncertaintyNotes: [
+          ...previousAreaAssessments.overall.uncertaintyNotes,
+          "Uppdateringen minskar inte behovet av fortsatt validering av faktisk påverkan."
+        ]
+      },
+      governance: {
+        ...previousAreaAssessments.governance,
+        potentialLabel: "Ansvarsfull → Hållbarhetsdrivande",
+        assessment:
+          "Uppdateringen ger en något tydligare bild av ansvar och prioriteringar, vilket stärker styrningsområdet som coachningsfråga. Bolaget bör nu koppla sina principer till konkreta beslut i produktutveckling, kunddialog och kommunikation. Det är fortfarande för tidigt att bedöma området som moget, men riktningen är mer genomtänkt än i föregående version.",
+        uncertaintyNotes: [
+          "Det saknas fortfarande återkommande arbetssätt eller lärdomar som visar hur principerna används i praktiken."
+        ]
+      }
     },
-    informationQualityScore: clampScore(input.previousDashboard.informationQualityScore + 6),
-    informationQualityRationale:
-      "Informationskvaliteten har stärkts något genom uppdateringen, men flera antaganden kvarstår."
+    informationQualityComment:
+      "Något tydligare underlag, men antaganden återstår.",
+    informationQualityScore: clampPercentage((input.previousDashboard.informationQualityScore ?? input.sufficiency.overallInformationQuality) + 6)
   };
 
   return {
@@ -355,18 +423,18 @@ export function mockUpdateAnalysis(input: {
       newRisks: ["Nya beroenden kan uppstå om uppdateringen innebär snabbare skalning."],
       reducedRisks: ["Viss osäkerhet minskar när bolaget beskriver fler konkreta vägval."],
       newOpportunities: ["Uppdateringen kan användas för mer fokuserad kund- och pilotvalidering."],
-      changedScores: [
+      changedAreaAssessments: [
         {
           category: "OVERALL",
-          previousScore: input.previousDashboard.scores.overall,
-          newScore: changedDashboard.scores.overall,
-          reason: "Mer konkret information stärker bedömningen något."
+          previousPotential: previousAreaAssessments.overall.potentialLabel,
+          newPotential: changedDashboard.areaAssessments.overall.potentialLabel,
+          reason: "Mer konkret information stärker den övergripande textbedömningen."
         },
         {
           category: "GOVERNANCE",
-          previousScore: input.previousDashboard.scores.governance,
-          newScore: changedDashboard.scores.governance,
-          reason: "Uppdateringen ger något bättre bild av ansvar och vägval."
+          previousPotential: previousAreaAssessments.governance.potentialLabel,
+          newPotential: changedDashboard.areaAssessments.governance.potentialLabel,
+          reason: "Uppdateringen ger bättre bild av ansvar och vägval."
         }
       ],
       recommendedNextDiscussions: [

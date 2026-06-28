@@ -33,6 +33,27 @@ export const confidenceLabels = {
   HIGH: "Hög"
 } as const;
 
+export const priorityLabels = {
+  LOW: "Låg",
+  MEDIUM: "Medel",
+  HIGH: "Hög"
+} as const;
+
+export const businessModelCompatibilityLabels = {
+  COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY: "Hållbar riktning",
+  UNCERTAIN: "Osäker riktning",
+  HARMFUL_OR_RISKY: "Riskfylld riktning"
+} as const;
+
+export const businessModelCompatibilityDescriptions = {
+  COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY:
+    "Kärnaffären verkar kunna utvecklas utan att bygga på tydlig negativ påverkan.",
+  UNCERTAIN:
+    "Det går inte att avgöra riktningen ännu eftersom viktiga antaganden eller konsekvenser är oklara.",
+  HARMFUL_OR_RISKY:
+    "Kärnaffären verkar kunna skapa betydande negativ påverkan eller affärsrisk om den växer."
+} as const;
+
 export const materialityDriverLabels = {
   RISK: "Risk",
   OPPORTUNITY: "Möjlighet",

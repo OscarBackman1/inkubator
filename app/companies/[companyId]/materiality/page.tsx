@@ -41,7 +41,7 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
 
   return (
     <div>
-      <Stepper current={1} />
+      <Stepper current={1} companyId={company.id} />
       <div className="mb-6">
         <p className="text-sm uppercase tracking-wide text-stone-500">Steg 1 av 3 – Sammanfattning och väsentliga områden</p>
         <h1 className="text-3xl font-semibold">{company.name}</h1>
@@ -50,16 +50,25 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
         </p>
       </div>
 
-      <section className="mb-6 rounded border border-stone-200 bg-white p-5 shadow-soft">
-        <h2 className="text-lg font-semibold">Hållbarhetsperspektiv</h2>
-        <p className="mt-3 leading-7 text-stone-700">{materiality.companySummary}</p>
-        <p className="mt-3 leading-7 text-stone-700">{materiality.sustainabilityPerspectiveSummary}</p>
-        <p className="mt-3 rounded bg-stone-50 p-3 text-sm text-stone-600">{materiality.materialityApproach}</p>
-      </section>
-
       <form action={approveMaterialityAction.bind(null, company.id, assessment.id)} className="space-y-5">
+        <section className="rounded border border-stone-200 bg-white p-5 shadow-soft">
+          <h2 className="text-lg font-semibold">Hållbarhetsperspektiv</h2>
+          <p className="mt-3 leading-7 text-stone-700">{materiality.companySummary}</p>
+          <p className="mt-3 leading-7 text-stone-700">{materiality.sustainabilityPerspectiveSummary}</p>
+          <p className="mt-3 rounded bg-stone-50 p-3 text-sm text-stone-600">{materiality.materialityApproach}</p>
+          <label className="mt-4 block text-sm font-medium">
+            Kommentar eller korrigering
+            <textarea
+              name="summaryComment"
+              rows={3}
+              className="mt-1 w-full rounded border border-stone-300 px-3 py-2"
+              placeholder="Skriv om något i summeringen behöver förtydligas, korrigeras eller kompletteras."
+            />
+          </label>
+        </section>
+
         <section>
-          <h2 className="mb-3 text-xl font-semibold">Vi kommer att bedöma följande väsentliga områden</h2>
+          <h2 className="mb-3 text-xl font-semibold">Identifierade väsentliga områden</h2>
           <div className="grid gap-4">
             {materiality.selectedAspects.map((aspect, index) => (
               <article key={aspect.code} className="rounded border border-stone-200 bg-white p-5 shadow-soft">

@@ -89,16 +89,6 @@ export default async function CompaniesPage({
                 <ImpactLevelBadge label={dashboard?.impactLevel.labelSv} />
                 <RiskIndicatorBadge label={dashboard?.riskIndicator.labelSv} />
               </div>
-              <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <dt className="text-stone-500">Poäng</dt>
-                  <dd className="text-xl font-semibold">{dashboard?.scores.overall ?? "-"}</dd>
-                </div>
-                <div>
-                  <dt className="text-stone-500">Informationskvalitet</dt>
-                  <dd className="text-xl font-semibold">{dashboard?.informationQualityScore ?? "-"}</dd>
-                </div>
-              </dl>
               <div className="mt-5 flex flex-wrap gap-2">
                 <Link
                   href={`/companies/${company.id}/${dashboard ? "dashboard" : "materiality"}`}

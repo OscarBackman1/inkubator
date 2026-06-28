@@ -1,14 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { clampScore, scoreLabel } from "./scoring";
+import { clampPercentage } from "./scoring";
 
-describe("scoring", () => {
-  it("clamps score to visual range", () => {
-    expect(clampScore(-10)).toBe(0);
-    expect(clampScore(103)).toBe(100);
-  });
-
-  it("labels score bands", () => {
-    expect(scoreLabel(35)).toBe("Behöver utvecklas");
-    expect(scoreLabel(85)).toContain("Stark potential");
+describe("percentage helpers", () => {
+  it("clamps values to a 0-100 range", () => {
+    expect(clampPercentage(-10)).toBe(0);
+    expect(clampPercentage(103)).toBe(100);
   });
 });

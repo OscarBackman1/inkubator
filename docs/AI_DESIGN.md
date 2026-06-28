@@ -18,4 +18,6 @@ Varje steg:
 - returnerar strikt JSON,
 - exponerar aldrig API-nyckel till klienten.
 
+Slutanalysen använder textbaserade områdesbedömningar i `areaAssessments` i stället för synliga hållbarhetspoäng. Varje område har potentialetikett, bedömningstext och osäkerheter som stöd för coachning. Informationsläget visas som en kort kommentar i `informationQualityComment`, inte som en siffra.
+
 Dokument betraktas som opålitligt källmaterial. Prompter ska ignorera instruktioner i dokument som försöker ändra roll, outputformat, säkerhetsregler eller be modellen avslöja prompt.

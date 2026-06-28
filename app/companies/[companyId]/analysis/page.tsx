@@ -7,6 +7,7 @@ import { Stepper } from "@/components/Stepper";
 import { finalizeAnalysisAction, uploadInformationAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
 import { createCategoryAspectDisplayCodes } from "@/lib/sustainability/aspectCodes";
+import { getSufficiencyInformationComment } from "@/lib/sustainability/informationQuality";
 import { categoryLabels } from "@/lib/sustainability/labels";
 import type { SufficiencyResult } from "@/lib/ai/schemas";
 
@@ -27,21 +28,20 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
   if (!company) redirect("/companies");
   const assessment = company.assessments[0];
   if (!assessment) redirect(`/companies/${company.id}/materiality`);
-  if (assessment.status === "COMPLETE" && assessment.dashboardJson) {
-    redirect(`/companies/${company.id}/dashboard`);
-  }
+  const analysisComplete = assessment.status === "COMPLETE" && Boolean(assessment.dashboardJson);
   const sufficiency = assessment.sufficiencyJson as SufficiencyResult | null;
   const aspectDisplayCodes = sufficiency ? createCategoryAspectDisplayCodes(sufficiency.aspectChecks) : [];
 
   return (
     <div>
-      <Stepper current={2} />
+      <Stepper current={2} companyId={company.id} />
       <div className="mb-6">
         <p className="text-sm uppercase tracking-wide text-stone-500">Steg 2 av 3 – Komplettera information</p>
         <h1 className="text-3xl font-semibold">Analys & informationsgap</h1>
         <p className="mt-2 max-w-3xl text-stone-600">
-          Ladda upp ytterligare information om bolaget. Verktyget frågar bara efter sådant som behövs för nästa bedömning och
-          låter dig gå vidare även om allt inte är besvarat.
+          {analysisComplete
+            ? "Här ser du vilket informationsläge analysen byggde på och vilka kompletteringsfrågor som fanns innan resultatet skapades."
+            : "Ladda upp ytterligare information om bolaget. Verktyget frågar bara efter sådant som behövs för nästa bedömning och låter dig gå vidare även om allt inte är besvarat."}
         </p>
       </div>
 
@@ -78,8 +78,8 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
           <section className="rounded border border-stone-200 bg-white p-5 shadow-soft">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold">Informationskvalitet {sufficiency.overallInformationQuality}/100</h2>
-                <p className="mt-2 text-stone-600">{sufficiency.generalComment}</p>
+                <h2 className="text-lg font-semibold">Informationsläge</h2>
+                <p className="mt-2 text-stone-600">{getSufficiencyInformationComment(sufficiency)}</p>
               </div>
               <Badge tone={sufficiency.readyForFinalAnalysis ? "good" : "warn"}>
                 {sufficiency.readyForFinalAnalysis ? "Kan analyseras" : "Svagt underlag"}
@@ -87,7 +87,16 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
             </div>
           </section>
 
-          <form action={finalizeAnalysisAction.bind(null, company.id, assessment.id)} className="space-y-4">
+          {analysisComplete && (
+            <section className="rounded border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+              Resultatet är redan skapat. Du kan läsa informationsgapet här, men kompletteringar görs genom att skapa en ny analysversion från dashboarden.
+            </section>
+          )}
+
+          <form
+            action={analysisComplete ? undefined : finalizeAnalysisAction.bind(null, company.id, assessment.id)}
+            className="space-y-4"
+          >
             {sufficiency.aspectChecks.map((check, index) => {
               const question = assessment.gapQuestions.find((item) => item.aspectCode === check.code);
               return (
@@ -132,36 +141,51 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
                       <textarea
                         name={`answer-${question.id}`}
                         rows={4}
+                        defaultValue={question.answerText ?? ""}
+                        disabled={analysisComplete}
                         placeholder="Svara med det ni vet. Det går att gå vidare även om svaret saknas."
-                        className="mt-3 w-full rounded border border-stone-300 bg-white px-3 py-2"
+                        className="mt-3 w-full rounded border border-stone-300 bg-white px-3 py-2 disabled:bg-stone-100 disabled:text-stone-600"
                       />
-                      <div className="mt-3 flex flex-wrap gap-3">
-                        <select name={`status-${question.id}`} className="rounded border border-stone-300 bg-white px-3 py-2 text-sm">
-                          <option value="ANSWERED">Besvarad</option>
-                          <option value="OPEN">Obesvarad</option>
-                          <option value="NOT_AVAILABLE">Ej tillgänglig</option>
-                        </select>
-                        <input
-                          name={`file-${question.id}`}
-                          type="file"
-                          multiple
-                          accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
-                          className="rounded border border-stone-300 bg-white px-3 py-2 text-sm"
-                        />
-                      </div>
+                      {!analysisComplete && (
+                        <div className="mt-3 flex flex-wrap gap-3">
+                          <select
+                            name={`status-${question.id}`}
+                            defaultValue={question.status}
+                            className="rounded border border-stone-300 bg-white px-3 py-2 text-sm"
+                          >
+                            <option value="ANSWERED">Besvarad</option>
+                            <option value="OPEN">Obesvarad</option>
+                            <option value="NOT_AVAILABLE">Ej tillgänglig</option>
+                          </select>
+                          <input
+                            name={`file-${question.id}`}
+                            type="file"
+                            multiple
+                            accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
+                            className="rounded border border-stone-300 bg-white px-3 py-2 text-sm"
+                          />
+                        </div>
+                      )}
+                      {analysisComplete && (
+                        <p className="mt-2 text-xs text-stone-500">
+                          Status: {question.status === "ANSWERED" ? "Besvarad" : question.status === "NOT_AVAILABLE" ? "Ej tillgänglig" : "Obesvarad"}
+                        </p>
+                      )}
                     </div>
                   )}
                 </article>
               );
             })}
-            <AiSubmitButton
-              idleLabel="Jag har kompletterat det jag kan – fortsätt"
-              pendingLabel="Skapar dashboard..."
-              pendingTitle="Samlad bedömning skapas"
-              pendingDescription="Affärsmodell, impactnivå, riskindikator, informationskvalitet, risker, möjligheter och diskussionsfrågor vägs samman."
-              fallbackHref={`/companies/${company.id}/dashboard`}
-              className="px-5 py-2.5"
-            />
+            {!analysisComplete && (
+              <AiSubmitButton
+                idleLabel="Jag har kompletterat det jag kan – fortsätt"
+                pendingLabel="Skapar dashboard..."
+                pendingTitle="Samlad bedömning skapas"
+                pendingDescription="Affärsmodell, impactnivå, riskindikator, informationsläge, risker, möjligheter och diskussionsfrågor vägs samman."
+                fallbackHref={`/companies/${company.id}/dashboard`}
+                className="px-5 py-2.5"
+              />
+            )}
           </form>
         </div>
       )}
