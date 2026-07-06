@@ -22,3 +22,154 @@ textarea {
 summary {
   cursor: pointer;
 }
+
+.grass-blade {
+  bottom: var(--blade-bottom);
+  left: var(--blade-left);
+  width: var(--blade-width);
+  height: var(--blade-height);
+  opacity: var(--blade-opacity);
+  transform: rotate(var(--blade-rotate));
+  transform-origin: bottom center;
+  animation: grass-sway var(--blade-duration) ease-in-out infinite;
+  animation-delay: var(--blade-delay);
+  background: linear-gradient(180deg, rgba(122, 154, 61, 0.82), rgba(31, 95, 74, 0.68));
+  border-radius: 999px 999px 4px 4px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.grass-blade::after {
+  content: "";
+  position: absolute;
+  left: 46%;
+  bottom: 18%;
+  width: 24%;
+  height: 52%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateX(-50%) rotate(3deg);
+}
+
+.grass-field::before,
+.grass-field::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background:
+    repeating-linear-gradient(
+      96deg,
+      rgba(31, 95, 74, 0.1) 0 1px,
+      transparent 1px 14px
+    ),
+    linear-gradient(180deg, rgba(248, 247, 243, 0), rgba(31, 95, 74, 0.08));
+}
+
+.grass-field::after {
+  height: 30%;
+  opacity: 0.7;
+  background:
+    repeating-linear-gradient(
+      84deg,
+      rgba(122, 154, 61, 0.12) 0 1px,
+      transparent 1px 10px
+    );
+}
+
+.wind-layer {
+  overflow: visible;
+  filter: blur(0.15px);
+}
+
+.wind-current {
+  fill: none;
+  stroke: rgba(31, 95, 74, 0.62);
+  stroke-dasharray: 180 260;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
+  animation: wind-drift var(--wind-duration) ease-in-out infinite;
+  animation-delay: var(--wind-delay);
+}
+
+.wind-current-1 {
+  --wind-delay: -3s;
+  --wind-duration: 22s;
+  --wind-from: -2.5%;
+  --wind-to: 3.5%;
+  --wind-opacity-low: 0.09;
+  --wind-opacity-high: 0.22;
+}
+
+.wind-current-2 {
+  --wind-delay: -9s;
+  --wind-duration: 18s;
+  --wind-from: 3.2%;
+  --wind-to: -2.8%;
+  --wind-opacity-low: 0.075;
+  --wind-opacity-high: 0.18;
+  stroke: rgba(122, 154, 61, 0.58);
+  stroke-width: 1.6;
+}
+
+.wind-current-3 {
+  --wind-delay: -14s;
+  --wind-duration: 24s;
+  --wind-from: -1.5%;
+  --wind-to: 2.5%;
+  --wind-opacity-low: 0.07;
+  --wind-opacity-high: 0.17;
+  stroke: rgba(248, 247, 243, 0.86);
+  stroke-width: 1.5;
+}
+
+.wind-current-4 {
+  --wind-delay: -6s;
+  --wind-duration: 20s;
+  --wind-from: 2%;
+  --wind-to: -3%;
+  --wind-opacity-low: 0.06;
+  --wind-opacity-high: 0.15;
+  stroke: rgba(31, 95, 74, 0.5);
+  stroke-width: 1.25;
+}
+
+@keyframes grass-sway {
+  0%,
+  100% {
+    transform: rotate(calc(var(--blade-rotate) - 1.2deg));
+  }
+  50% {
+    transform: rotate(calc(var(--blade-rotate) + 2.2deg));
+  }
+}
+
+@keyframes wind-drift {
+  0%,
+  100% {
+    opacity: var(--wind-opacity-low);
+    stroke-dashoffset: 0;
+    transform: translateX(var(--wind-from));
+  }
+  50% {
+    opacity: var(--wind-opacity-high);
+    stroke-dashoffset: -150;
+    transform: translateX(var(--wind-to));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grass-blade,
+  .wind-current {
+    animation: none;
+  }
+
+  .wind-current {
+    opacity: 0.08;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
+}
