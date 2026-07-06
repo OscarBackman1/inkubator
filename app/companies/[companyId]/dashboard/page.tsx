@@ -3,7 +3,6 @@ import { AiSubmitButton } from "@/components/AiSubmitButton";
 import { Badge } from "@/components/Badge";
 import { FileDropInput } from "@/components/FileDropInput";
 import { ImpactLevelBadge } from "@/components/ImpactLevelBadge";
-import { RiskIndicatorBadge } from "@/components/RiskIndicatorBadge";
 import { Stepper } from "@/components/Stepper";
 import { updateCompanyAction } from "@/lib/actions/company";
 import { prisma } from "@/lib/db/prisma";
@@ -84,9 +83,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
 
         <section className="rounded border border-stone-200 bg-white p-5 shadow-soft">
           <h2 className="text-lg font-semibold">Riskbild</h2>
-          <div className="mt-3">
-            <RiskIndicatorBadge label={dashboard.riskIndicator.labelSv} />
-          </div>
           <p className="mt-3 leading-7 text-stone-700">{dashboard.riskIndicator.rationale}</p>
         </section>
       </div>
@@ -204,7 +200,7 @@ function AreaAssessmentCard({ item, featured = false }: { item: AreaAssessmentIt
         Potential: {item.potentialLabel}
       </p>
       <p className="mt-3 leading-7 text-stone-700">{item.assessment}</p>
-      <UncertaintyNotes notes={item.uncertaintyNotes} />
+      {!featured && <UncertaintyNotes notes={item.uncertaintyNotes} />}
     </section>
   );
 }

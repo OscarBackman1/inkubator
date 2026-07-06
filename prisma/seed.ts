@@ -77,7 +77,7 @@ async function main() {
       phase: company.phase,
       industry: company.industry,
       journeyText: company.journeyText,
-      ideaText: company.journeyText
+      documentText: company.journeyText
     });
     const sufficiency = mockSufficiency({ materiality, documentText: company.journeyText });
     const dashboard = mockFinalAnalysis({

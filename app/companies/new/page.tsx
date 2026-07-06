@@ -15,6 +15,9 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
       <div className="mb-6">
         <p className="text-sm uppercase tracking-wide text-stone-500">Nytt bolag</p>
         <h1 className="text-3xl font-semibold">Skapa nytt bolag</h1>
+        <p className="mt-2 max-w-3xl text-stone-600">
+          Ladda upp det underlag som finns redan nu, så att de väsentliga områdena bedöms mot hela bilden från start.
+        </p>
       </div>
       <form action={createCompanyAction} className="grid max-w-3xl gap-5 rounded border border-stone-200 bg-white p-6 shadow-soft">
         {query.error && (
@@ -52,6 +55,16 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
             description="Dra filen till ytan eller välj den från datorn."
           />
         </div>
+        <div>
+          <p className="text-sm font-medium">Övrigt befintligt underlag</p>
+          <FileDropInput
+            name="supportingFiles"
+            accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
+            multiple
+            title="Övrigt befintligt underlag"
+            description="Pitchdeck, affärsplan, marknadsanalys, teknisk beskrivning, kundunderlag eller andra dokument som redan finns."
+          />
+        </div>
         <label className="text-sm font-medium">
           Vad kan du berätta om bolagets hållbarhetsambitioner, viktiga vägval eller arbete med miljömässiga, sociala eller styrningsfrågor?
           <span className="mt-2 block rounded bg-stone-50 p-3 text-sm font-normal leading-6 text-stone-600">
@@ -69,7 +82,7 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: P
           idleLabel="Skapa företag"
           pendingLabel="Skapar bedömning..."
           pendingTitle="Väsentlighetsbedömning tas fram"
-          pendingDescription="Idébeskrivningen, branschen och bolagets hållbarhetsambitioner vägs samman för att identifiera de mest relevanta områdena."
+          pendingDescription="Idébeskrivningen, övrigt underlag, branschen och bolagets hållbarhetsambitioner vägs samman för att identifiera de mest relevanta områdena."
         />
       </form>
     </AppShell>

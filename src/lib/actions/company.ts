@@ -55,6 +55,9 @@ export async function createCompanyAction(formData: FormData) {
   const industry = String(formData.get("industry") ?? "").trim();
   const journeyText = String(formData.get("journeyText") ?? "").trim();
   const ideaFile = formData.get("ideaFile");
+  const supportingFiles = formData
+    .getAll("supportingFiles")
+    .filter((file): file is File => file instanceof File && file.size > 0);
 
   if (!name || !industry || !journeyText || !(ideaFile instanceof File) || ideaFile.size === 0) {
     redirect("/companies/new?error=missing");
@@ -83,13 +86,24 @@ export async function createCompanyAction(formData: FormData) {
     }
   });
 
-  const document = await persistDocument({
+  const documents: Array<{ originalName: string; extractedText: string | null }> = [];
+  documents.push(await persistDocument({
     file: ideaFile,
     companyId: company.id,
     uploadedById: user.id,
     assessmentId: assessment.id,
     uploadStage: "IDEA_DESCRIPTION"
-  });
+  }));
+
+  for (const file of supportingFiles) {
+    documents.push(await persistDocument({
+      file,
+      companyId: company.id,
+      uploadedById: user.id,
+      assessmentId: assessment.id,
+      uploadStage: "FULL_INFORMATION"
+    }));
+  }
 
   await runMaterialityAnalysis({
     companyId: company.id,
@@ -99,7 +113,7 @@ export async function createCompanyAction(formData: FormData) {
     phase,
     industry,
     journeyText,
-    ideaText: document.extractedText ?? ""
+    documentText: combineDocumentText(documents)
   });
 
   redirect(`/companies/${company.id}/materiality`);
@@ -107,7 +121,10 @@ export async function createCompanyAction(formData: FormData) {
 
 export async function approveMaterialityAction(companyId: string, assessmentId: string, formData: FormData) {
   const user = await requireUser();
-  const assessment = await prisma.assessment.findUniqueOrThrow({ where: { id: assessmentId } });
+  const assessment = await prisma.assessment.findUniqueOrThrow({
+    where: { id: assessmentId },
+    include: { company: true, documents: true }
+  });
   const materiality = assessment.materialityJson as MaterialityResult | null;
   if (!materiality) redirect(`/companies/${companyId}/materiality?error=no-materiality`);
 
@@ -172,8 +189,16 @@ export async function approveMaterialityAction(companyId: string, assessmentId: 
     prisma.company.update({ where: { id: companyId }, data: { status: "INFO_COLLECTION" } })
   ]);
 
+  await runSufficiencyAnalysis({
+    companyId,
+    assessmentId,
+    phase: assessment.company.phase,
+    materiality: updated,
+    documentText: combineDocumentText(assessment.documents)
+  });
+
   revalidatePath(`/companies/${companyId}`);
-  redirect(`/companies/${companyId}/analysis`);
+  redirect(`/companies/${companyId}/analysis#gap`);
 }
 
 export async function uploadInformationAction(companyId: string, assessmentId: string, formData: FormData) {

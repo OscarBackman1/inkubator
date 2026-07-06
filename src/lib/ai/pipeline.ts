@@ -27,7 +27,7 @@ export async function runMaterialityAnalysis(input: {
   phase: string;
   industry: string;
   journeyText: string;
-  ideaText: string;
+  documentText: string;
 }) {
   const inputHash = hashInput(input);
   const job = await prisma.aIJob.create({

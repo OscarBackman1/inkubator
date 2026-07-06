@@ -59,13 +59,16 @@ För ACCELERATOR kan frågan handla om återkommande arbetssätt eller resultat,
 Tillåtna businessModelCompatibility.status: HARMFUL_OR_RISKY, COMPATIBLE_WITH_LONG_TERM_SUSTAINABILITY, UNCERTAIN.
 Tillåtna impactLevel.level: HARMFUL_RISKY, RISK_EXPOSED, RESPONSIBLE, SUSTAINABILITY_DRIVEN, IMPACT_DRIVEN, SYSTEM_CHANGING_IMPACT.
 Tillåtna riskIndicator.level: BALANCED, SOME_IMBALANCE, SIGNIFICANT_IMBALANCE.
+Riskindikatorns labelSv används som intern översiktsetikett, men riskIndicator.rationale ska kunna visas ensam under rubriken Riskbild. Skriv en konkret riskbild i 2-4 meningar: nämn tydliga styrkor eller skyddsfaktorer, de viktigaste riskluckorna, varför de kan bli allvarliga vid skalning och om de verkar hanterbara med prioriterade åtgärder i närtid. Undvik abstrakta formuleringar som "balans mellan" eller att upprepa labelSv.
 Tillåtna priority/severity/potential: LOW, MEDIUM, HIGH.
 Tillåtna timeHorizon: SHORT, MEDIUM, LONG.
 Varje areaAssessments-item ska ha potentialLabel, assessment och uncertaintyNotes.
-potentialLabel ska vara en svensk textetikett, t.ex. "Ansvarsfull", "Hållbarhetsdrivande", "Impactdrivande" eller "Ansvarsfull → Hållbarhetsdrivande".
+potentialLabel ska vara en svensk textetikett, t.ex. "Ansvarsfull", "Hållbarhetsdrivande", "Impactdrivande", "Systemförändrande" eller "Ansvarsfull → Hållbarhetsdrivande".
 assessment ska vara 2-4 genomarbetade, coachande meningar som bedömer affärsidéns framtida påverkan, risker och möjligheter inom området. Skriv inte som betyg, ranking eller compliancekontroll.
-overall ska vara en samlad övergripande bedömning av affärsmodellen. environment ska fokusera på miljömässig hållbarhet, social på social hållbarhet och governance på styrning, etik, ansvar och förtroende.
-uncertaintyNotes ska vara string[] och tydligt markera saknad information eller antaganden. Begränsat underlag gör inte ett område oväsentligt.
+overall ska vara en självständig samlad bedömning av affärsidéns system-, bransch- eller marknadspåverkan, inte ett snitt av environment, social och governance. Ett bolag kan vara Systemförändrande om kärnaffären driver omställning i en bransch även om SOC, GOV eller vissa ENV-frågor är svaga. Förklara i overall.assessment varför och ange om den främsta potentialen ligger i ENV, SOC, GOV eller en kombination.
+impactLevel.labelSv och areaAssessments.overall.potentialLabel ska beskriva samma övergripande nivå.
+environment ska fokusera på miljömässig hållbarhet, social på social hållbarhet och governance på styrning, etik, ansvar och förtroende.
+uncertaintyNotes ska vara string[] och tydligt markera saknad information eller antaganden. Begränsat underlag gör inte ett område oväsentligt. För overall ska uncertaintyNotes vara [] eftersom osäkerheter och saknad information hör hemma i respektive område och i informationsläget.
 informationQualityComment ska vara en mycket kort svensk kommentar på högst 12 ord om hur underlaget bör läsas, t.ex. "Första bedömning möjlig, men antaganden återstår." Använd inte siffror eller /100.
 För risks och opportunities måste category vara ENVIRONMENT, SOCIAL, GOVERNANCE eller CUSTOM. Använd inte BUSINESS.
 greenwashingRisks måste vara array av objekt med claimOrRisk, whyRisky och howToSubstantiate, inte array av strings.

@@ -1,5 +1,29 @@
 # Promptversioner
 
+## 2026-07-06-v3
+
+Förtydligar riskbilden i dashboarden.
+
+- `riskIndicator.rationale` ska kunna stå ensam utan synlig risketikett.
+- Riskbilden ska beskriva konkreta styrkor, riskluckor, skalningsrisk och hanterbarhet i närtid.
+- Prompten undviker abstrakta formuleringar som "balans mellan".
+
+## 2026-07-06-v2
+
+Förtydligar den övergripande dashboardbedömningen.
+
+- Övergripande potential ska vara en självständig bedömning av system-, bransch- eller marknadspåverkan, inte ett snitt av ENV, SOC och GOV.
+- Ett bolag kan bedömas som Systemförändrande även om vissa områden är svagare, om kärnaffären driver omställning.
+- `overall.uncertaintyNotes` ska vara tom; osäkerheter visas i respektive område och i informationsläget.
+
+## 2026-07-06-v1
+
+Materialitetsanalysen utgår från samlat uppladdat underlag.
+
+- `input.documentText` ersätter tidigare idétexts-fält i materialitetssteget.
+- Väsentliga områden ska väljas utifrån bransch, fritext och allt initialt uppladdat material.
+- Informationsgapet körs efter godkänd materialitet på samma underlag.
+
 ## 2026-06-28-v2
 
 Tar bort synlig siffra för informationsläge i slutanalysen.

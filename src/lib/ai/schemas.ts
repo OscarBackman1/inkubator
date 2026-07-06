@@ -264,7 +264,16 @@ export const FinalAnalysisResultSchema = z.object({
   assumptions: StringArraySchema,
   limitations: StringArraySchema,
   disclaimer: z.string()
-});
+}).transform((result) => ({
+  ...result,
+  areaAssessments: {
+    ...result.areaAssessments,
+    overall: {
+      ...result.areaAssessments.overall,
+      uncertaintyNotes: [] as string[]
+    }
+  }
+}));
 
 export const UpdateAnalysisResultSchema = z.object({
   updatedDashboard: FinalAnalysisResultSchema,

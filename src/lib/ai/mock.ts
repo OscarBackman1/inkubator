@@ -11,7 +11,7 @@ type MaterialityInput = {
   phase: string;
   industry: string;
   journeyText: string;
-  ideaText: string;
+  documentText: string;
 };
 
 function lower(input: string) {
@@ -19,7 +19,7 @@ function lower(input: string) {
 }
 
 export function mockMateriality(input: MaterialityInput): MaterialityResult {
-  const text = lower(`${input.industry} ${input.journeyText} ${input.ideaText}`);
+  const text = lower(`${input.industry} ${input.journeyText} ${input.documentText}`);
   const isAi = text.includes("ai") || text.includes("mjukvara") || text.includes("saas");
   const isIndustry = text.includes("industri") || text.includes("material") || text.includes("produktion");
   const isHealth = text.includes("health") || text.includes("life") || text.includes("vård") || text.includes("patient");
@@ -220,17 +220,14 @@ export function mockFinalAnalysis(input: {
       level: hasAnswers ? "SOME_IMBALANCE" : "SIGNIFICANT_IMBALANCE",
       labelSv: hasAnswers ? "Viss obalans identifierad" : "Betydande obalans identifierad",
       rationale:
-        "Potentialen är tydligare än bolagets beskrivna förmåga att hantera risker, särskilt kring styrning, data och värdekedja."
+        "Bolaget har tydliga möjligheter genom tidig kunddialog och en lösning som kan skapa praktisk nytta. De största riskluckorna finns kring ansvar, data, värdekedja och hur effekten ska följas upp när användningen växer. Riskerna kan bli allvarliga vid snabb skalning, men verkar hanterbara om teamet prioriterar tydliga arbetssätt och enklare bevis på faktisk nytta i närtid."
     },
     areaAssessments: {
       overall: {
         potentialLabel: overallPotential,
         assessment:
           `${input.companyName} bedöms ha potential att utvecklas till ett hållbarhets- eller impactdrivande bolag om de tidiga vägvalen kopplas tydligt till kundnytta, riskförståelse och faktisk effekt. Affärsidén verkar inte bygga på uppenbart negativ påverkan, men bolaget befinner sig fortfarande i en fas där antaganden behöver testas. Den viktigaste coachningsfrågan är hur teamet kan göra den positiva potentialen mer verifierbar utan att fastna i mogna rapporteringskrav.`,
-        uncertaintyNotes: [
-          "Underlaget visar främst riktning och antaganden, inte validerad effekt över tid.",
-          "Flera framtida vägval kring skalning, ansvar och uppföljning är ännu otydliga."
-        ]
+        uncertaintyNotes: []
       },
       environment: {
         potentialLabel: hasEnvironmentalAspect ? "Ansvarsfull → Hållbarhetsdrivande" : "Ansvarsfull",
@@ -393,10 +390,7 @@ export function mockUpdateAnalysis(input: {
         ...previousAreaAssessments.overall,
         assessment:
           `${previousAreaAssessments.overall.assessment} Uppdateringen stärker bilden av vilka vägval bolaget arbetar med, men den faktiska effekten behöver fortfarande följas genom kunddialog, pilotlärdomar eller andra tidiga bevis.`,
-        uncertaintyNotes: [
-          ...previousAreaAssessments.overall.uncertaintyNotes,
-          "Uppdateringen minskar inte behovet av fortsatt validering av faktisk påverkan."
-        ]
+        uncertaintyNotes: []
       },
       governance: {
         ...previousAreaAssessments.governance,

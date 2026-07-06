@@ -42,7 +42,7 @@ export async function GET(_request: Request, context: { params: Promise<{ compan
   <p>${escapeHtml(dashboard.impactLevel.rationale)}</p>
   <p>${escapeHtml(dashboard.businessModelCompatibility.rationale)}</p>
   <h2>Riskbild</h2>
-  <p><strong>${escapeHtml(dashboard.riskIndicator.labelSv)}</strong>: ${escapeHtml(dashboard.riskIndicator.rationale)}</p>
+  <p>${escapeHtml(dashboard.riskIndicator.rationale)}</p>
   ${section("Vad bolaget behöver arbeta med", dashboard.whatCompanyNeedsToWorkOn.map((item) => `${item.title}: ${item.realisticStartupNextStep}`))}
   ${section("Risker", dashboard.risks.map((item) => `${item.title}: ${item.mitigationSuggestion}`))}
   ${section("Möjligheter", dashboard.opportunities.map((item) => `${item.title}: ${item.recommendedAction}`))}
@@ -74,7 +74,8 @@ function escapeHtml(input: string) {
 }
 
 function areaSection(item: { title: string; potentialLabel: string; assessment: string; uncertaintyNotes: string[] }) {
-  const uncertainties = item.uncertaintyNotes.length
+  const showUncertainties = item.title !== "Övergripande bedömning";
+  const uncertainties = showUncertainties && item.uncertaintyNotes.length
     ? `<p class="muted"><strong>Osäkerheter:</strong> ${escapeHtml(item.uncertaintyNotes.join(" "))}</p>`
     : "";
   return `<div class="area"><h3>${escapeHtml(item.title)}</h3><p><strong>Potential: ${escapeHtml(item.potentialLabel)}</strong></p><p>${escapeHtml(item.assessment)}</p>${uncertainties}</div>`;

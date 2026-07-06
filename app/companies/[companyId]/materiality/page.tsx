@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AiSubmitButton } from "@/components/AiSubmitButton";
 import { AspectCodeBadge } from "@/components/AspectCodeBadge";
 import { Badge } from "@/components/Badge";
 import { Stepper } from "@/components/Stepper";
@@ -13,6 +14,8 @@ import {
   phaseLabels
 } from "@/lib/sustainability/labels";
 import type { MaterialityResult } from "@/lib/ai/schemas";
+
+export const maxDuration = 120;
 
 export default async function MaterialityPage({ params }: { params: Promise<{ companyId: string }> }) {
   const { companyId } = await params;
@@ -158,9 +161,13 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
           </div>
         </details>
 
-        <button className="rounded bg-forest px-5 py-2.5 font-medium text-white hover:bg-emerald-800">
-          Godkänn och fortsätt
-        </button>
+        <AiSubmitButton
+          idleLabel="Godkänn och fortsätt"
+          pendingLabel="Granskar informationsgap..."
+          pendingTitle="Informationsgap granskas"
+          pendingDescription="Underlaget analyseras för att identifiera eventuella informationsluckor. Om något viktigt saknas kan du få en kompletteringsfråga inom ett eller flera områden."
+          fallbackHref={`/companies/${company.id}/analysis`}
+        />
       </form>
     </div>
   );

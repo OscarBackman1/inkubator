@@ -41,7 +41,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
         <p className="mt-2 max-w-3xl text-stone-600">
           {analysisComplete
             ? "Här ser du vilket informationsläge analysen byggde på och vilka kompletteringsfrågor som fanns innan resultatet skapades."
-            : "Ladda upp ytterligare information om bolaget. Verktyget frågar bara efter sådant som behövs för nästa bedömning och låter dig gå vidare även om allt inte är besvarat."}
+            : "Här granskas informationsläget utifrån underlaget som låg till grund för väsentligheten. Verktyget frågar bara efter sådant som behövs för nästa bedömning och låter dig gå vidare även om allt inte är besvarat."}
         </p>
       </div>
 
@@ -50,23 +50,23 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
           action={uploadInformationAction.bind(null, company.id, assessment.id)}
           className="rounded border border-stone-200 bg-white p-6 shadow-soft"
         >
-          <h2 className="text-lg font-semibold">Ladda upp ytterligare information</h2>
+          <h2 className="text-lg font-semibold">Kör informationsgapanalys</h2>
           <p className="mt-2 text-sm text-stone-600">
-            Pitchdeck, affärsplan, marknadsanalys, teknisk beskrivning, kundunderlag eller andra dokument som redan finns.
+            Om informationsgapet saknas kan du köra analysen med befintligt underlag. Lägg bara till dokument här om du vill komplettera innan frågorna tas fram.
           </p>
           <FileDropInput
             name="documents"
             multiple
             accept=".pdf,.docx,.pptx,.xlsx,.csv,.txt,.md"
-            title="Ytterligare information"
-            description="Dra en eller flera filer till ytan eller välj dem från datorn."
+            title="Kompletterande underlag"
+            description="Valfritt: dra en eller flera filer till ytan eller välj dem från datorn."
             className="mt-4"
           />
           <AiSubmitButton
             idleLabel="Kör informationsgapanalys"
             pendingLabel="Granskar informationsgap..."
             pendingTitle="Informationsgap granskas"
-            pendingDescription="Underlaget jämförs med de väsentliga områdena för att välja högst en relevant kompletteringsfråga per område."
+            pendingDescription="Underlaget analyseras för att identifiera eventuella informationsluckor. Om något viktigt saknas kan du få en kompletteringsfråga inom ett eller flera områden."
             fallbackHref={`/companies/${company.id}/analysis`}
             className="mt-5"
           />

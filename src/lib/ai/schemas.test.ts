@@ -9,7 +9,7 @@ describe("AI schemas", () => {
       phase: "SCREENING",
       industry: "SaaS / Programvara",
       journeyText: "AI-lösning för energioptimering.",
-      ideaText: "AI-lösning för energioptimering."
+      documentText: "AI-lösning för energioptimering."
     });
 
     expect(MaterialityResultSchema.parse(result).selectedAspects.length).toBeGreaterThan(0);
@@ -21,7 +21,7 @@ describe("AI schemas", () => {
       phase: "SCREENING",
       industry: "SaaS / Programvara",
       journeyText: "AI-lösning för energioptimering.",
-      ideaText: "AI-lösning för energioptimering."
+      documentText: "AI-lösning för energioptimering."
     });
 
     const drifted = {
@@ -45,7 +45,7 @@ describe("AI schemas", () => {
       phase: "SCREENING",
       industry: "SaaS / Programvara",
       journeyText: "AI-lösning för energioptimering.",
-      ideaText: "AI-lösning för energioptimering."
+      documentText: "AI-lösning för energioptimering."
     });
     const result = mockSufficiency({ materiality, documentText: "Kort underlag" });
     const drifted = {
@@ -74,7 +74,7 @@ describe("AI schemas", () => {
       phase: "SCREENING",
       industry: "SaaS / Programvara",
       journeyText: "AI-lösning för energioptimering.",
-      ideaText: "AI-lösning för energioptimering."
+      documentText: "AI-lösning för energioptimering."
     });
     const result = mockSufficiency({ materiality, documentText: "Kort underlag" });
     const drifted = {
@@ -103,7 +103,7 @@ describe("AI schemas", () => {
       phase: "SCREENING",
       industry: "SaaS / Programvara",
       journeyText: "AI-lösning för energioptimering.",
-      ideaText: "AI-lösning för energioptimering."
+      documentText: "AI-lösning för energioptimering."
     });
     const sufficiency = mockSufficiency({ materiality, documentText: "Kort underlag" });
     const result = mockFinalAnalysis({
@@ -115,6 +115,13 @@ describe("AI schemas", () => {
     });
     const drifted = {
       ...result,
+      areaAssessments: {
+        ...result.areaAssessments,
+        overall: {
+          ...result.areaAssessments.overall,
+          uncertaintyNotes: ["Den här ska visas i respektive område, inte övergripande."]
+        }
+      },
       risks: [...result.risks, { ...result.risks[0], title: "Affärsrisk", category: "BUSINESS" }],
       opportunities: [
         ...result.opportunities,
@@ -126,6 +133,7 @@ describe("AI schemas", () => {
     const parsed = FinalAnalysisResultSchema.parse(drifted);
 
     expect(parsed.areaAssessments.overall.potentialLabel).toContain("potential");
+    expect(parsed.areaAssessments.overall.uncertaintyNotes).toEqual([]);
     expect(parsed.areaAssessments.environment.assessment).toContain("miljö");
     expect(parsed.informationQualityComment).toContain("bedömning");
     expect(parsed.risks.at(-1)?.category).toBe("CUSTOM");

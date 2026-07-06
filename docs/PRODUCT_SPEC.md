@@ -10,14 +10,13 @@ Det är inte ett ESG-rapporteringsverktyg och gör inte formell CSRD-, VSME-, ju
 
 1. Logga in.
 2. Skapa eller öppna bolag.
-3. Ladda upp idébeskrivning och beskriv bolagets hållbarhetsambitioner, viktiga vägval eller ESG-relaterade frågor.
+3. Ladda upp idébeskrivning, övrigt befintligt underlag och beskriv bolagets hållbarhetsambitioner, viktiga vägval eller ESG-relaterade frågor.
 4. Kör väsentlighetsanalys.
 5. Granska och korrigera väsentliga områden.
-6. Ladda upp befintligt underlag.
-7. Kör informationsgapanalys.
-8. Besvara högst en fråga per väsentligt område.
-9. Skapa dashboard.
-10. Uppdatera bolaget senare och skapa ny analysversion.
+6. Kör informationsgapanalys på samma underlag.
+7. Besvara eventuella kompletteringsfrågor.
+8. Skapa dashboard.
+9. Uppdatera bolaget senare och skapa ny analysversion.
 
 ## Produktprinciper
 

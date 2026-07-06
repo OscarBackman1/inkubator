@@ -48,9 +48,9 @@ I toppbaren ska status ändras från `Mock-AI aktivt` till `OpenAI aktivt · <mo
 Rekommenderat prototyptest:
 
 1. Sätt `AI_MOCK_MODE=false` och en giltig `OPENAI_API_KEY`.
-2. Skapa ett nytt bolag med en konkret idébeskrivning.
-3. Kontrollera att materialitetsanalysen innehåller bolagsspecifika resonemang, osäkerheter och beaktade men ej väsentliga områden.
-4. Godkänn områdena och ladda upp mer information.
+2. Skapa ett nytt bolag med en konkret idébeskrivning och övrigt befintligt underlag.
+3. Kontrollera att materialitetsanalysen innehåller bolagsspecifika resonemang, osäkerheter och beaktade men ej väsentliga områden från hela underlaget.
+4. Godkänn områdena och kontrollera att informationsgapet tas fram utan en separat huvuduppladdning.
 5. Kontrollera att informationsgapet ställer högst en fråga per område.
 6. Svara kort på frågorna och skapa dashboard.
 7. Läs risker, möjligheter, diskussionsfrågor och begränsningar som om de skulle användas i ett coachmöte.

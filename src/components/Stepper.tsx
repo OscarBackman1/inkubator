@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Stepper({ current, companyId }: { current: 1 | 2 | 3; companyId: string }) {
   const steps = [
     { label: "Bolagsöversikt", description: "Väsentliga områden", href: "materiality" },
-    { label: "Komplettera information", description: "Informationsgap", href: "analysis" },
+    { label: "Informationsgap", description: "Kompletteringar", href: "analysis" },
     { label: "Resultat", description: "Dashboard", href: "dashboard" }
   ];
   return (

@@ -88,7 +88,7 @@ function AiAnalysisOverlay({
         <div className="mt-6 space-y-3">
           <LoadingStep label="Läser in bolagets underlag" delay="delay-0" />
           <LoadingStep label="Väger risker, möjligheter och osäkerheter" delay="delay-150" />
-          <LoadingStep label="Formulerar coachande slutsatser på svenska" delay="delay-300" />
+          <LoadingStep label="Formulerar coachande slutsatser" delay="delay-300" />
         </div>
         <p className="mt-5 rounded bg-stone-50 p-3 text-xs leading-5 text-stone-500">
           Behåll fliken öppen medan bedömningen tas fram. Det kan ta upp till någon minut beroende på underlagets
