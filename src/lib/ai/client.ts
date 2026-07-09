@@ -2,8 +2,14 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { COMMON_SYSTEM_PROMPT } from "./prompts";
 
+export const DEFAULT_OPENAI_MODEL = "gpt-5.5";
+
 export function isMockMode() {
   return process.env.AI_MOCK_MODE !== "false" || !process.env.OPENAI_API_KEY;
+}
+
+export function getConfiguredAiModel() {
+  return isMockMode() ? "mock" : process.env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
 }
 
 export function getAiRuntimeStatus() {
@@ -13,7 +19,7 @@ export function getAiRuntimeStatus() {
     mode: isMockMode() ? "mock" : "openai",
     hasApiKey,
     forcedMock,
-    model: isMockMode() ? "mock" : process.env.OPENAI_MODEL ?? "gpt-4.1-mini"
+    model: getConfiguredAiModel()
   };
 }
 
@@ -28,7 +34,7 @@ export async function runOpenAIJson<T>(
   }
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const model = process.env.OPENAI_MODEL ?? "gpt-4.1-mini";
+  const model = process.env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
   const controller = new AbortController();
   const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS ?? 120000);
   const timeout = setTimeout(() => controller.abort(), timeoutMs);

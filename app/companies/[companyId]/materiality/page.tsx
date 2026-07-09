@@ -46,7 +46,7 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
     <div>
       <Stepper current={1} companyId={company.id} />
       <div className="mb-6">
-        <p className="text-sm uppercase tracking-wide text-stone-500">Steg 1 av 3 – Sammanfattning och väsentliga områden</p>
+        <p className="text-sm uppercase tracking-wide text-stone-500">Steg 2 av 4 – Sammanfattning och väsentliga områden</p>
         <h1 className="text-3xl font-semibold">{company.name}</h1>
         <p className="mt-1 text-sm text-stone-600">
           {phaseLabels[company.phase]} · {company.industry}

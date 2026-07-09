@@ -37,7 +37,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ comp
       <Stepper current={3} companyId={company.id} />
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm uppercase tracking-wide text-stone-500">Dashboard · Version {assessment.version}</p>
+          <p className="text-sm uppercase tracking-wide text-stone-500">Steg 4 av 4 – Hållbarhetsanalys · Version {assessment.version}</p>
           <h1 className="text-3xl font-semibold">{company.name}</h1>
           <p className="mt-1 text-sm text-stone-600">
             {phaseLabels[company.phase]} · {company.industry} · Senast analyserad {assessment.completedAt?.toLocaleDateString("sv-SE") ?? "pågående"}

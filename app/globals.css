@@ -23,6 +23,86 @@ summary {
   cursor: pointer;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body:has(.creation-modal-backdrop[open]) {
+  overflow: hidden;
+}
+
+.creation-intro {
+  background-image:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0%, transparent 42%),
+    linear-gradient(135deg, #174c3c 0%, #1f5f4a 52%, #17483a 100%);
+}
+
+.creation-intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.38) 0.65px, transparent 0.65px);
+  background-size: 16px 16px;
+  -webkit-mask-image: linear-gradient(to left, black, transparent 80%);
+  mask-image: linear-gradient(to left, black, transparent 80%);
+}
+
+.creation-intro-glow {
+  animation: creation-glow 8s ease-in-out infinite;
+}
+
+.creation-modal-backdrop {
+  animation: creation-modal-backdrop-in 180ms ease-out both;
+}
+
+.creation-modal-backdrop:not([open]) {
+  display: none;
+}
+
+.creation-modal-panel {
+  animation: creation-modal-panel-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.creation-step {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: creation-step-in 500ms ease-out forwards;
+}
+
+@keyframes creation-step-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creation-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes creation-modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+@keyframes creation-glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(-16px, 12px, 0) scale(1.08);
+  }
+}
+
 .grass-blade {
   bottom: var(--blade-bottom);
   left: var(--blade-left);
@@ -162,9 +242,22 @@ summary {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .creation-intro-glow,
+  .creation-modal-backdrop,
+  .creation-modal-panel,
+  .creation-step,
   .grass-blade,
   .wind-current {
     animation: none;
+  }
+
+  .creation-step {
+    opacity: 1;
+    transform: none;
   }
 
   .wind-current {

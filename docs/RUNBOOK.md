@@ -32,7 +32,7 @@ Sätt:
 ```bash
 AI_MOCK_MODE=false
 OPENAI_API_KEY=...
-OPENAI_MODEL=...
+OPENAI_MODEL=gpt-5.5
 ```
 
 Om nyckel saknas går appen automatiskt i mockläge.

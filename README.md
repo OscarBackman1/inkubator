@@ -27,7 +27,7 @@ För riktig OpenAI-körning:
 ```bash
 AI_MOCK_MODE=false
 OPENAI_API_KEY=din-nyckel
-OPENAI_MODEL=gpt-4.1-mini
+OPENAI_MODEL=gpt-5.5
 ```
 
 Starta om dev-servern efter ändringen. Toppbaren visar `OpenAI aktivt` när appen faktiskt använder API:t.
@@ -41,7 +41,7 @@ Starta om dev-servern efter ändringen. Toppbaren visar `OpenAI aktivt` när app
    - `DATABASE_URL`
    - `AI_MOCK_MODE=false`
    - `OPENAI_API_KEY`
-   - `OPENAI_MODEL=gpt-5-mini`
+   - `OPENAI_MODEL=gpt-5.5`
    - `OPENAI_TIMEOUT_MS=120000`
    - `MAX_UPLOAD_MB=25`
 5. Deploya. Vercel kör `npm run vercel-build`, vilket genererar Prisma Client, pushar databasschemat och bygger Next.js.

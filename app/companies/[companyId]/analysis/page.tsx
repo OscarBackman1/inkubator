@@ -36,7 +36,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ compa
     <div>
       <Stepper current={2} companyId={company.id} />
       <div className="mb-6">
-        <p className="text-sm uppercase tracking-wide text-stone-500">Steg 2 av 3 – Komplettera information</p>
+        <p className="text-sm uppercase tracking-wide text-stone-500">Steg 3 av 4 – Komplettera information</p>
         <h1 className="text-3xl font-semibold">Analys & informationsgap</h1>
         <p className="mt-2 max-w-3xl text-stone-600">
           {analysisComplete

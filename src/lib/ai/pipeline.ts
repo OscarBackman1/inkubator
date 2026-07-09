@@ -17,7 +17,7 @@ import {
   type FinalAnalysisResult,
   type SufficiencyResult
 } from "./schemas";
-import { isMockMode, runOpenAIJson } from "./client";
+import { getConfiguredAiModel, isMockMode, runOpenAIJson } from "./client";
 
 export async function runMaterialityAnalysis(input: {
   companyId: string;
@@ -37,7 +37,7 @@ export async function runMaterialityAnalysis(input: {
       jobType: "MATERIALITY",
       status: "RUNNING",
       inputHash,
-      modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+      modelName: getConfiguredAiModel(),
       promptVersion: PROMPT_VERSION
     }
   });
@@ -58,7 +58,7 @@ export async function runMaterialityAnalysis(input: {
         data: {
           materialityJson: result,
           status: "MATERIALITY_REVIEW",
-          modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+          modelName: getConfiguredAiModel(),
           promptVersion: PROMPT_VERSION,
           inputHash
         }
@@ -91,7 +91,7 @@ export async function runSufficiencyAnalysis(input: {
       jobType: "SUFFICIENCY",
       status: "RUNNING",
       inputHash,
-      modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+      modelName: getConfiguredAiModel(),
       promptVersion: PROMPT_VERSION
     }
   });
@@ -159,7 +159,7 @@ export async function runFinalAnalysis(input: {
       jobType: "FINAL_ANALYSIS",
       status: "RUNNING",
       inputHash,
-      modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+      modelName: getConfiguredAiModel(),
       promptVersion: PROMPT_VERSION
     }
   });
@@ -223,7 +223,7 @@ export async function runUpdateAnalysis(input: {
       sufficiencyJson: input.sufficiency,
       previousAssessmentId: previous.id,
       createdById: input.userId,
-      modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+      modelName: getConfiguredAiModel(),
       promptVersion: PROMPT_VERSION,
       inputHash: hashInput(input)
     }
@@ -245,7 +245,7 @@ export async function runUpdateAnalysis(input: {
       jobType: "UPDATE_ANALYSIS",
       status: "RUNNING",
       inputHash: hashInput(input),
-      modelName: isMockMode() ? "mock" : process.env.OPENAI_MODEL,
+      modelName: getConfiguredAiModel(),
       promptVersion: PROMPT_VERSION
     }
   });
