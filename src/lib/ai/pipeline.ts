@@ -28,6 +28,12 @@ export async function runMaterialityAnalysis(input: {
   industry: string;
   journeyText: string;
   documentText: string;
+  referenceMaterialityAreas?: Array<{
+    code?: string;
+    name: string;
+    category?: string;
+    description?: string;
+  }>;
 }) {
   const inputHash = hashInput(input);
   const job = await prisma.aIJob.create({

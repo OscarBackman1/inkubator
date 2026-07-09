@@ -17,6 +17,7 @@ import {
   runUpdateAnalysis
 } from "@/lib/ai/pipeline";
 import type { FinalAnalysisResult, MaterialityResult, SufficiencyResult } from "@/lib/ai/schemas";
+import { categoryCodePrefixes } from "@/lib/sustainability/labels";
 
 async function persistDocument(input: {
   file: File;
@@ -160,10 +161,30 @@ export async function approveMaterialityAction(companyId: string, assessmentId: 
 
   const customName = String(formData.get("customName") ?? "").trim();
   if (customName) {
+    const customCategoryInput = String(formData.get("customCategory") ?? "");
+    const customCategories = {
+      ENVIRONMENT: "ENVIRONMENT",
+      SOCIAL: "SOCIAL",
+      GOVERNANCE: "GOVERNANCE"
+    } as const;
+    const customCategory = customCategories[customCategoryInput as keyof typeof customCategories] ?? "GOVERNANCE";
+    const ownCodePrefix = `OWN-${categoryCodePrefixes[customCategory]}-`;
+    const nextOwnIndex = Math.max(
+      0,
+      ...[
+        ...updated.selectedAspects,
+        ...updated.consideredButNotMaterial
+      ].map((aspect) => {
+        if (!aspect.code.startsWith(ownCodePrefix)) return 0;
+        const index = Number(aspect.code.slice(ownCodePrefix.length));
+        return Number.isInteger(index) ? index : 0;
+      })
+    ) + 1;
+
     updated.selectedAspects.push({
-      code: `CUSTOM-${Date.now()}`,
+      code: `${ownCodePrefix}${String(nextOwnIndex).padStart(2, "0")}`,
       name: customName,
-      category: "CUSTOM",
+      category: customCategory,
       status: "MATERIAL",
       materialityStrength: 3,
       materialityDrivers: ["RISK"],

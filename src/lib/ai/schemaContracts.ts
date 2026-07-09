@@ -8,7 +8,7 @@ export const SCHEMA_CONTRACTS = {
 - assumptions: string[]
 - warnings: string[]
 
-Tillåtna category: ENVIRONMENT, SOCIAL, GOVERNANCE, CUSTOM.
+Tillåtna category för AI-genererade områden: ENVIRONMENT, SOCIAL, GOVERNANCE. CUSTOM stöds endast för bakåtkompatibilitet med äldre manuellt tillagda områden och ska inte användas för ett nytt AI-genererat område.
 Tillåtna status för selectedAspects: MATERIAL, UNCERTAIN.
 Tillåtna confidence: LOW, MEDIUM, HIGH.
 Tillåtna materialityDrivers: RISK, OPPORTUNITY, IMPACT, VALUE_CHAIN, REGULATORY, USER_IMPACT.
@@ -70,7 +70,7 @@ impactLevel.labelSv och areaAssessments.overall.potentialLabel ska beskriva samm
 environment ska fokusera på miljömässig hållbarhet, social på social hållbarhet och governance på styrning, etik, ansvar och förtroende.
 uncertaintyNotes ska vara string[] och tydligt markera saknad information eller antaganden. Begränsat underlag gör inte ett område oväsentligt. För overall ska uncertaintyNotes vara [] eftersom osäkerheter och saknad information hör hemma i respektive område och i informationsläget.
 informationQualityComment ska vara en mycket kort svensk kommentar på högst 12 ord om hur underlaget bör läsas, t.ex. "Första bedömning möjlig, men antaganden återstår." Använd inte siffror eller /100.
-För risks och opportunities måste category vara ENVIRONMENT, SOCIAL, GOVERNANCE eller CUSTOM. Använd inte BUSINESS.
+För AI-genererade risks och opportunities måste category vara ENVIRONMENT, SOCIAL eller GOVERNANCE. CUSTOM stöds endast för äldre manuellt tillagda områden. Använd inte BUSINESS.
 greenwashingRisks måste vara array av objekt med claimOrRisk, whyRisky och howToSubstantiate, inte array av strings.
 Varje discussionQuestions.question ska vara konkret och kunna besvaras med 3-5 meningar av en coach eller grundare utan specialistkunskap.
 Undvik tekniska termer, förkortningar och fackspråk. Fråga efter observerbara fakta, erfarenheter, feedback, resultat, beslut eller arbetssätt, inte hur något tekniskt implementeras.

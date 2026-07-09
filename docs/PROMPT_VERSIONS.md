@@ -1,5 +1,25 @@
 # Promptversioner
 
+## 2026-07-09-v2
+
+Korrigerar huvudkategorierna till ENV, SOC och GOV.
+
+- Kund-, användar-, patient-, medborgar- och målgruppspåverkan kategoriseras som SOC.
+- Ansvar, avtal, styrning, datahantering och professionella samarbeten kategoriseras normalt som GOV.
+- Egna områden använder endast prefixen `OWN-ENV`, `OWN-SOC` eller `OWN-GOV`.
+- Den felaktigt införda separata kundkategorin i v1 har tagits bort ur prompt, schema, UI och downstream-analys.
+
+## 2026-07-09-v1
+
+Öppnar väsentlighetsanalysen för bolagsspecifika områden och skärper urvalet.
+
+- Eventuella referensområden används som inspiration och mappningsstöd, inte som en sluten lista.
+- En väsentlighetsgrind hindrar generell skalning, försäljning och produktutveckling från att väljas utan tydlig hållbarhetskoppling.
+- Egna AI-genererade områden får en saklig huvudkategori och interna ID:n enligt `OWN-<kategori>-<nummer>`.
+- Denna version ersattes av v2 innan kategorimodellen färdigställdes.
+- Miljöperspektivet ska alltid övervägas för digitala, SaaS-, AI- och plattformsbolag, utan att automatiskt bli väsentligt.
+- Evidens, säkerhet, framtidsrelevans och osäkerheter har fått tydligare och kontraktssäkra instruktioner.
+
 ## 2026-07-06-v3
 
 Förtydligar riskbilden i dashboarden.

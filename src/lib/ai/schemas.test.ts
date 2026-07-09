@@ -39,6 +39,49 @@ describe("AI schemas", () => {
     expect(parsed.selectedAspects[0].uncertaintyNotes[0]).toContain("saknas");
   });
 
+  it("normalizes the disallowed CUS shorthand to the social category", () => {
+    const result = mockMateriality({
+      name: "Vårdtjänst AB",
+      phase: "SCREENING",
+      industry: "Digital hälsa",
+      journeyText: "En tjänst som hjälper patienter i kontakt med vården.",
+      documentText: "Patienter använder tjänsten för att förstå och hantera sin vård."
+    });
+    const socialAspect = result.selectedAspects.find((aspect) => aspect.category === "SOCIAL");
+
+    expect(socialAspect).toBeDefined();
+    const parsed = MaterialityResultSchema.parse({
+      ...result,
+      selectedAspects: result.selectedAspects.map((aspect) =>
+        aspect === socialAspect ? { ...aspect, category: "CUS" } : aspect
+      )
+    });
+
+    expect(parsed.selectedAspects.find((aspect) => aspect.code === socialAspect?.code)?.category).toBe("SOCIAL");
+  });
+
+  it("includes customer and user impact in the mock social assessment", () => {
+    const materiality = mockMateriality({
+      name: "Vårdtjänst AB",
+      phase: "SCREENING",
+      industry: "Digital hälsa",
+      journeyText: "En tjänst för patienter.",
+      documentText: "Patienter använder tjänsten i kontakt med vården."
+    });
+    const sufficiency = mockSufficiency({ materiality, documentText: "Kort underlag" });
+    const finalAnalysis = mockFinalAnalysis({
+      companyName: "Vårdtjänst AB",
+      phase: "SCREENING",
+      industry: "Digital hälsa",
+      materiality,
+      sufficiency,
+      gapAnswers: []
+    });
+
+    expect(materiality.selectedAspects.some((aspect) => aspect.category === "SOCIAL")).toBe(true);
+    expect(finalAnalysis.areaAssessments.social.potentialLabel).toBe("Impactdrivande potential");
+  });
+
   it("normalizes sufficiency question string fields returned as arrays", () => {
     const materiality = mockMateriality({
       name: "Demo AB",

@@ -136,8 +136,18 @@ export default async function MaterialityPage({ params }: { params: Promise<{ co
 
         <section className="rounded border border-stone-200 bg-white p-5">
           <h2 className="text-lg font-semibold">Lägg till eget område</h2>
-          <div className="mt-3 grid gap-3 md:grid-cols-2">
+          <div className="mt-3 grid gap-3 md:grid-cols-3">
             <input name="customName" placeholder="Områdesnamn" className="rounded border border-stone-300 px-3 py-2" />
+            <select
+              name="customCategory"
+              defaultValue="GOVERNANCE"
+              aria-label="Huvudkategori för eget område"
+              className="rounded border border-stone-300 px-3 py-2"
+            >
+              <option value="ENVIRONMENT">{categoryLabels.ENVIRONMENT}</option>
+              <option value="SOCIAL">{categoryLabels.SOCIAL}</option>
+              <option value="GOVERNANCE">{categoryLabels.GOVERNANCE}</option>
+            </select>
             <input
               name="customUnderlying"
               placeholder="Underliggande aspekter, kommaseparerat"

@@ -8,12 +8,26 @@ export const CategorySchema = z.preprocess((value) => {
   if (normalized === "ENVIRONMENTAL" || normalized === "MILJO" || normalized === "MILJÖ") {
     return "ENVIRONMENT";
   }
+  if (normalized === "ENV") return "ENVIRONMENT";
   if (normalized === "HUMAN_RIGHTS" || normalized === "SOCIAL_HUMAN_RIGHTS") {
+    return "SOCIAL";
+  }
+  if (normalized === "SOC") return "SOCIAL";
+  if (
+    normalized === "CUS" ||
+    normalized === "CUSTOMER" ||
+    normalized === "CONSUMER" ||
+    normalized === "CONSUMERS" ||
+    normalized === "CUSTOMERS" ||
+    normalized === "CUSTOMER_USER" ||
+    normalized === "CUSTOMERS_USERS"
+  ) {
     return "SOCIAL";
   }
   if (normalized === "ETHICS" || normalized === "GOVERNANCE_ETHICS") {
     return "GOVERNANCE";
   }
+  if (normalized === "GOV") return "GOVERNANCE";
   if (!CategoryEnumSchema.safeParse(normalized).success) return "CUSTOM";
   return normalized;
 }, CategoryEnumSchema);

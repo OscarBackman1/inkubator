@@ -24,7 +24,7 @@ export const categoryCodePrefixes = {
   ENVIRONMENT: "ENV",
   SOCIAL: "SOC",
   GOVERNANCE: "GOV",
-  CUSTOM: "CUS"
+  CUSTOM: "OWN"
 } as const;
 
 export const confidenceLabels = {
